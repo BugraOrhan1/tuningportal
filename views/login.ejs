@@ -1,8 +1,8 @@
 <%- include('partials/header') %>
 <div class="auth-wrap">
   <div class="auth-card">
-    <h1>Inloggen</h1>
-    <p>Log in bij je klanten file-panel. Alleen klanten met account hebben toegang tot file services.</p>
+    <h1>Inloggen — <%= brand ? brand.name : 'REVBOOST' %></h1>
+    <p>Log in bij je <strong><%= brand ? brand.name : 'REVBOOST' %></strong> klanten file-panel. Alleen klanten met account hebben toegang tot file services. Uniek merk — alle autos via live API.</p>
     <div id="error" class="error-box" style="display:none"></div>
     <form id="loginForm">
       <div class="form-group"><label>E-mail</label><input name="email" type="email" required placeholder="jouw@email.com"></div>
@@ -11,7 +11,7 @@
       <button class="btn btn-primary" style="width:100%" type="submit">Inloggen</button>
     </form>
     <p style="margin-top:14px;text-align:center;font-size:12px">Nog geen account? <a href="/register">Registreren</a> • <a href="/">Terug naar website</a></p>
-    <div style="margin-top:16px;padding:10px;background:#fff3ef;border:1px solid #ffccb3;font-size:11px"><strong>Demo account:</strong><br>Maak eerst een account via Registreren, of gebruik: demo@fast.local / demo123</div>
+    <div style="margin-top:16px;padding:10px;background:#fff3ef;border:1px solid #ffccb3;font-size:11px"><strong>Demo account:</strong><br>Maak eerst een account via Registreren, of gebruik: <strong>demo@revboost.nl / demo123</strong> (ook demo@fast.local werkt)</div>
   </div>
 </div>
 <script>

@@ -1,37 +1,38 @@
 <footer>
   <div class="footer-inner">
     <div>
-      <div class="logo-text" style="color:#fff;font-size:18px;margin-bottom:10px">FAST<span style="color:var(--primary)">CHIPTUNINGFILES</span></div>
-      <p style="font-size:12px;color:#78909c;line-height:1.5">High quality ECU tuning files delivered fast by experienced engineers. Ready to flash. Tested on real vehicles.</p>
+      <div class="logo-text" style="color:#fff;font-size:18px;margin-bottom:10px"><%= brand ? brand.name : 'REVBOOST' %><span style="color:var(--primary)"> PERFORMANCE</span></div>
+      <p style="font-size:12px;color:#78909c;line-height:1.5">REVBOOST — Uniek Nederlands tuning files platform. High quality ECU files delivered fast by certified engineers. Ready to flash. Dyno-tested. Geen kopie — eigen identiteit.</p>
       <div style="display:flex;gap:10px;margin-top:12px">
-        <img src="https://fast-chiptuningfiles.com/wp-content/uploads/2024/03/Dashboard.png" alt="" style="height:30px;opacity:.7" onerror="this.style.display='none'">
+        <span style="background:var(--primary);color:#fff;padding:4px 8px;font-size:10px">UNIEK MERK • REVBOOST.NL</span>
       </div>
     </div>
     <div>
       <h4>Snelle links</h4>
       <a href="/">Home</a>
-      <a href="/tuning-specs">Tuning specs bekijken</a>
+      <a href="/tuning-specs">Tuning specs bekijken (alle autos via API)</a>
       <a href="/account/file-services/new-file-service">New file service</a>
       <a href="/account/buy-credits">Buy credits</a>
       <a href="/legal/terms-and-conditions">Terms and conditions</a>
     </div>
     <div>
       <h4>Services</h4>
-      <a href="#">Stage 1 Tuning</a>
+      <a href="#">Stage 1 Tuning (+30% vermogen)</a>
       <a href="#">Stage 2 Tuning</a>
-      <a href="#">DPF / EGR / AdBlue</a>
+      <a href="#">DPF / EGR / AdBlue off</a>
       <a href="#">V-Max Off</a>
       <a href="#">TCU Tuning</a>
     </div>
     <div>
-      <h4>Contact</h4>
-      <a href="tel:+31787830013">+31 78 783 00 13</a>
-      <a href="mailto:info@fast-chiptuningfiles.com">info@fast-chiptuningfiles.com</a>
-      <p style="font-size:12px;color:#78909c;margin-top:10px">Ma-Vr 09:00 - 18:00<br>Za 10:00 - 15:00</p>
+      <h4>Contact — REVBOOST</h4>
+      <a href="tel:+31850600033"><%= brand ? brand.phone : '+31 85 060 00 33' %></a>
+      <a href="mailto:info@revboost.nl"><%= brand ? brand.email : 'info@revboost.nl' %></a>
+      <p style="font-size:12px;color:#78909c;margin-top:10px">Ma-Vr 09:00 - 18:00<br>Za 10:00 - 15:00 • 5 min delivery 24/7</p>
+      <p style="font-size:10px;color:#78909c;margin-top:6px">API: Alle voertuigen live via /api/* — geen missende autos</p>
     </div>
   </div>
   <div class="footer-bottom">
-    <div style="max-width:1200px;margin:0 auto;padding:0 16px">© 2026 Fast Chiptuningfiles - Alle rechten voorbehouden. Chiptuning files voor professioneel gebruik.</div>
+    <div style="max-width:1200px;margin:0 auto;padding:0 16px">© 2026 <%= brand ? brand.full : 'REVBOOST Performance Files' %> — Uniek merk, geïnspireerd door Fast-Chiptuningfiles maar eigen identiteit. Alle rechten voorbehouden.</div>
   </div>
 </footer>
 <script src="/js/app.js"></script>

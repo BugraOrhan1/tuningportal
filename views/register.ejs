@@ -1,12 +1,12 @@
 <%- include('partials/header') %>
 <div class="auth-wrap">
   <div class="auth-card">
-    <h1>Account aanmaken</h1>
-    <p>Maak een klanten account aan voor toegang tot het file-panel.</p>
+    <h1>Account aanmaken — <%= brand ? brand.name : 'REVBOOST' %></h1>
+    <p>Maak een <strong><%= brand ? brand.name : 'REVBOOST' %></strong> klanten account aan voor toegang tot het file-panel. Uniek merk, alle voertuigen via live API.</p>
     <div id="error" class="error-box" style="display:none"></div>
     <form id="regForm">
       <div class="form-group"><label>Naam *</label><input name="name" required placeholder="Bugra Orhan"></div>
-      <div class="form-group"><label>Bedrijfsnaam (optioneel)</label><input name="company" placeholder="Fast-Tuningshop BV"></div>
+      <div class="form-group"><label>Bedrijfsnaam (optioneel)</label><input name="company" placeholder="REVBOOST Performance BV"></div>
       <div class="form-group"><label>E-mail *</label><input name="email" type="email" required placeholder="jouw@email.com"></div>
       <div class="form-group"><label>Wachtwoord *</label><input name="password" type="password" required placeholder="Min. 6 tekens"></div>
       <label style="font-size:11px;display:flex;gap:6px;margin:10px 0"><input type="checkbox" required style="width:auto"> Ik ga akkoord met <a href="/legal/terms-and-conditions">Terms and conditions</a> en <a href="/legal/refund-policy">Refund policy</a></label>

@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><%= typeof title !== 'undefined' ? title : 'File Panel | Fast-Chiptuningfiles' %></title>
+<title><%= typeof title !== 'undefined' ? title : 'File Panel | ' + (brand ? brand.full : 'REVBOOST') %></title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css">
@@ -13,8 +13,9 @@
 <div class="page-wrapper">
   <div class="Sidebar">
     <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
-      <img src="https://fast-chiptuningfiles.com/wp-content/uploads/2024/03/2.png" style="height:28px" onerror="this.style.display='none'">
-      <strong style="font-size:13px">FAST<span style="color:var(--primary)">FILES</span></strong>
+      <div style="width:30px;height:30px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;border-radius:4px">RB</div>
+      <strong style="font-size:13px"><%= brand ? brand.name : 'REVBOOST' %><span style="color:var(--primary)"></span></strong>
+      <span style="font-size:10px;background:var(--primary);color:#fff;padding:2px 4px;margin-left:auto">UNIEK</span>
     </div>
     <nav class="SidebarNavigation">
       <div class="Heading--h5">Main menu</div>

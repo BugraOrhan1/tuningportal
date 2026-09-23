@@ -16,5 +16,14 @@
     "password": "$2b$10$qThzbbtxw8WpzS1eGbRqGek2QjJeZ8cm2CEDs1R.cHvNKIk8yVHq6",
     "credits": 5,
     "createdAt": "2026-09-23T19:45:49.533Z"
+  },
+  {
+    "id": "797bb42a-b95a-43d0-92b3-efa18e3484ea",
+    "name": "Demo REVBOOST",
+    "email": "demo@revboost.nl",
+    "company": "REVBOOST",
+    "password": "$2b$10$LRzofBgG6tvwp0BSrq5Md.VFjuBI95ONCHGULKioDYr9HgbkbFRui",
+    "credits": 10,
+    "createdAt": "2026-09-23T19:49:45.611Z"
   }
 ]
