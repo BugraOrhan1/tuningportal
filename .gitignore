@@ -7,3 +7,7 @@ uploads/*.zip
 uploads/*.rar
 !uploads/.gitkeep
 .env
+
+# htdocs unpacked copies — only zip is tracked
+htdocs/mijndomein/
+htdocs/tuningportal/

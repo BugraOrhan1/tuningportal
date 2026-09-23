@@ -12,12 +12,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'revboost-secret-2025-unique-tuning';
 const BRAND = {
-  name: 'REVBOOST',
-  full: 'REVBOOST Performance Files',
+  name: 'MIJNDOMEIN',
+  full: 'MIJNDOMEIN Performance Files',
   tagline: 'High-Performance ECU Tuning Files',
-  email: 'info@revboost.nl',
+  email: 'info@mijndomein.nl',
   phone: '+31 85 060 00 33',
-  domain: 'revboost.nl'
+  domain: 'mijndomein.nl'
 };
 
 app.set('trust proxy', 1);
