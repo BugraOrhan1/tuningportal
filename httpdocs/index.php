@@ -54,8 +54,8 @@ function render($title, $body) {
     ? '<a href="/account">Account ('.htmlspecialchars($user['email']).')</a> <a href="/logout">Uitloggen</a>'
     : '<a href="/login">Inloggen</a> <a href="/register" class="btn btn-primary" style="padding:6px 14px">Registreren</a>';
   $nav = '<nav class="navbar"><div class="navbar-inner"><a href="/" class="logo"><div style="width:38px;height:38px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;border-radius:4px">DF</div><div class="logo-text">DASHFIX<span style="font-weight:400;color:#78909c;font-size:13px"> PERFORMANCE</span></div></a><ul class="nav-links"><li><a href="/">Home</a></li><li><a href="/tuning-specs">Tuning specs</a></li><li><a href="/account/file-services/new-file-service">New file service</a></li></ul><div>'.$navUser.'</div></div></nav>';
-  $footer = '<footer><div class="footer-inner"><div><div class="logo-text" style="color:#fff;font-size:18px;margin-bottom:10px">'.$brand['name'].'<span style="color:var(--primary)"> PERFORMANCE</span></div><p style="font-size:12px;color:#78909c">DASHFIX — Uniek Nederlands tuning files platform. High quality ECU files delivered fast by certified engineers.</p><div style="margin-top:12px"><span style="background:var(--primary);color:#fff;padding:4px 8px;font-size:10px">UNIEK MERK • '.strtoupper($brand['domain']).'</span></div></div><div><h4>Snelle links</h4><a href="/">Home</a><a href="/tuning-specs">Tuning specs</a><a href="/login">Inloggen</a></div><div><h4>Contact</h4><p style="font-size:12px;color:#78909c">'.$brand['email'].'<br>'.$brand['phone'].'</p></div></div></footer>';
-  echo '<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'.htmlspecialchars($title).' — '.$brand['full'].'</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/css/style.css"></head><body>'.$topbar.$nav.'<main>'.$body.'</main>'.$footer.'</body></html>';
+  $footer = '<footer><div class="footer-inner"><div><div class="logo-text" style="color:#fff;font-size:18px;margin-bottom:10px">'.$brand['name'].'<span style="color:var(--primary)"> PERFORMANCE</span></div><p style="font-size:12px;color:#78909c">DASHFIX — Uniek Nederlands tuning files platform. High quality ECU files delivered fast by certified engineers.</p><div style="margin-top:12px"><span style="background:var(--primary);color:#fff;padding:4px 8px;font-size:10px">UNIEK MERK • '.strtoupper($brand['domain']).'</span></div></div><div><h4>Snelle links</h4><a href="/">Home</a><a href="/tuning-specs">Tuning specs</a><a href="/login">Inloggen</a></div><div><h4>Contact</h4><p style="font-size:12px;color:#78909c">'.$brand['email'].'<br>'.$brand['phone'].'</p></div></div></footer><script src="/assets/js/app.js"></script><script src="/js/app.js"></script>';
+  echo '<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'.htmlspecialchars($title).' — '.$brand['full'].'</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="/css/style.css"></head><body>'.$topbar.$nav.'<main>'.$body.'</main>'.$footer.'</body></html>';
 }
 
 // Synthetic helpers (zelfde als Node: alle merken tonen)
@@ -152,18 +152,11 @@ if (strpos($path, '/api/') === 0) {
 // --- PAGES ---
 if ($path === '/' ) {
   $v=load_vehicles();
-  $opts='<option>Choose a make</option>';
-  foreach(array_slice($v['makes'],0,40) as $m) $opts.='<option value="'.$m['id'].'">'.htmlspecialchars($m['name']).'</option>';
-  $body='
-  <section class="hero"><div class="hero-inner"><h1>High quality ECU tuning files delivered fast by experienced engineers.</h1><p>Ready to flash. Dyno-tested. 24/7 support voor professionals.</p><a href="/register" class="btn btn-primary">Register Now</a> <a href="/login">Login</a></div></section>
-  <section class="configurator"><div class="container"><h2>Enhance your vehicle\'s performance</h2><div class="grid"><select id="make">'.$opts.'</select><select id="model"><option>Choose a model</option></select><select id="gen"><option>Choose a generation</option></select><select id="eng"><option>Choose an engine</option></select><button class="btn btn-primary" onclick="doSearch()">Search</button></div><div id="gain" style="margin-top:20px;padding:16px;background:#e8f5e9;display:none"></div></div></section>
-  <script>
-  const api="/api/v1/type-loader";
-  make.onchange=async()=>{ let r=await fetch(api+"?make="+make.value); let j=await r.json(); model.innerHTML="<option>Choose a model</option>"+(j.choices.models||[]).map(m=>`<option value="${m.id}">${m.name}</option>`).join(""); };
-  model.onchange=async()=>{ let r=await fetch(api+"?model="+model.value); let j=await r.json(); gen.innerHTML="<option>Choose a generation</option>"+(j.choices.generations||[]).map(g=>`<option value="${g.id}">${g.name}</option>`).join(""); };
-  gen.onchange=async()=>{ let r=await fetch(api+"?generation="+gen.value); let j=await r.json(); eng.innerHTML="<option>Choose an engine</option>"+(j.choices.engines||[]).map(e=>`<option value="${e.id}">${e.name}</option>`).join(""); };
-  async function doSearch(){ if(!eng.value) return; let r=await fetch("/api/power/"+eng.value); let j=await r.json(); gain.style.display="block"; gain.innerHTML=`<b>+${j.gainHp} hp winst</b> — Origineel ${j.original.hp}hp → Na tuning ${j.tuned.hp}hp`; }
-  </script>';
+  $makes = $v['makes'];
+  $brand = BRAND;
+  ob_start();
+  include __DIR__ . '/views/homepage.php';
+  $body = ob_get_clean();
   render('Home', $body);
   exit;
 }
