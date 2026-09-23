@@ -20,10 +20,11 @@ const BRAND = {
   domain: 'revboost.nl'
 };
 
+app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(cors());
+app.use(cors({origin: true, credentials: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -342,7 +343,8 @@ app.post('/api/auth/register', async (req, res) => {
   users.push(user);
   saveJson('users.json', users);
   const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
-  res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
+  const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  res.cookie('token', token, { httpOnly: true, sameSite: isSecure ? 'none' : 'lax', secure: isSecure, maxAge: 7*24*60*60*1000 });
   res.json({ success: true, token, user: { id: user.id, name: user.name, email: user.email } });
 });
 app.post('/api/auth/login', async (req, res) => {
@@ -353,7 +355,8 @@ app.post('/api/auth/login', async (req, res) => {
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) return res.status(400).json({ error: 'Onjuiste e-mail of wachtwoord' });
   const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
-  res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
+  const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  res.cookie('token', token, { httpOnly: true, sameSite: isSecure ? 'none' : 'lax', secure: isSecure, maxAge: 7*24*60*60*1000 });
   // also return redirect so JS can use it
   res.json({ success: true, token, redirect: redirect || req.body.redirect || '/account' });
 });
@@ -366,7 +369,8 @@ app.post('/login', async (req, res) => {
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) return res.status(400).render('login', { redirect: redirect || '/account', error: 'Onjuiste e-mail of wachtwoord', brand: BRAND });
   const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
-  res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
+  const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  res.cookie('token', token, { httpOnly: true, sameSite: isSecure ? 'none' : 'lax', secure: isSecure, maxAge: 7*24*60*60*1000 });
   const target = redirect && redirect.startsWith('/') ? redirect : '/account';
   return res.redirect(target);
 });
@@ -382,7 +386,8 @@ app.post('/register', async (req, res) => {
   users.push(user);
   saveJson('users.json', users);
   const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
-  res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
+  const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  res.cookie('token', token, { httpOnly: true, sameSite: isSecure ? 'none' : 'lax', secure: isSecure, maxAge: 7*24*60*60*1000 });
   return res.redirect('/account');
 });
 app.post('/api/auth/logout', (req, res) => {

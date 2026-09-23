@@ -41,7 +41,12 @@
       const ct=res.headers.get('content-type')||'';
       if(ct.includes('application/json')) data=await res.json(); else data={error: await res.text()};
       if(!res.ok){ errBox.style.display='block'; errBox.textContent = data.error || 'Inloggen mislukt (code '+res.status+')'; btn.disabled=false; btn.textContent=oldText; return; }
-      if(data.token){ try{ localStorage.setItem('token', data.token); }catch{} document.cookie = 'token='+data.token+'; path=/; max-age=604800; SameSite=Lax'; }
+      if(data.token){
+        try{ localStorage.setItem('token', data.token); }catch{}
+        const isHttps = location.protocol === 'https:';
+        document.cookie = 'token='+data.token+'; path=/; max-age=604800; SameSite=Lax' + (isHttps ? '; Secure' : '');
+        if(isHttps) document.cookie = 'token='+data.token+'; path=/; max-age=604800; SameSite=None; Secure';
+      }
       // kleine delay zodat cookie gezet is, dan hard redirect
       window.location.href = data.redirect || redirectTo || '/account';
       setTimeout(()=>{ window.location.href = data.redirect || redirectTo || '/account'; }, 300);

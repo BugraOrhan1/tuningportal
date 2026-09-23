@@ -27,7 +27,9 @@
 try{
   const t=localStorage.getItem('token');
   if(t && !document.cookie.includes('token=')){
-    document.cookie='token='+t+'; path=/; max-age=604800; SameSite=Lax';
+    const isHttps = location.protocol === 'https:';
+    document.cookie='token='+t+'; path=/; max-age=604800; SameSite=Lax' + (isHttps ? '; Secure' : '');
+    if(isHttps) document.cookie='token='+t+'; path=/; max-age=604800; SameSite=None; Secure';
   }
   // If server says not logged in but token exists, try to refresh UI
   const hasToken=!!localStorage.getItem('token');

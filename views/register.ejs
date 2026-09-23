@@ -30,7 +30,12 @@
       const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'include'});
       const data=await res.json();
       if(!res.ok){ errBox.style.display='block'; errBox.textContent=data.error||'Registreren mislukt'; btn.disabled=false; btn.textContent=old; return; }
-      if(data.token){ try{localStorage.setItem('token',data.token);}catch{} document.cookie='token='+data.token+'; path=/; max-age=604800; SameSite=Lax'; }
+      if(data.token){
+        try{localStorage.setItem('token',data.token);}catch{}
+        const isHttps = location.protocol === 'https:';
+        document.cookie='token='+data.token+'; path=/; max-age=604800; SameSite=Lax' + (isHttps ? '; Secure' : '');
+        if(isHttps) document.cookie='token='+data.token+'; path=/; max-age=604800; SameSite=None; Secure';
+      }
       window.location.href='/account'; setTimeout(()=>window.location.href='/account',300);
     }catch(ex){
       console.error(ex); errBox.style.display='block'; errBox.textContent='Netwerkfout, probeer normale registratie…';
