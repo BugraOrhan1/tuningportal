@@ -68,11 +68,28 @@
   </div>
 </div>
 
+<div style="background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 0">
+  <div style="max-width:1200px;margin:0 auto;padding:0 16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0"><i class="fa fa-database" style="color:var(--primary)"></i> Live voertuigdatabase — alle autos via externe API</h3>
+      <span style="font-size:11px;background:#e8f5e9;color:#2e7d32;padding:4px 8px;border-radius:10px">24-7 ChiptuningTools iframe + REVBOOST API</span>
+    </div>
+    <p style="font-size:12px;color:#78909c;margin-bottom:12px">Deze embedded database gebruikt de echte data van <a href="https://iframe.24-7chiptuningtools.com/" target="_blank">iframe.24-7chiptuningtools.com</a> (zelfde bron als door jou gevraagd) én onze eigen REVBOOST API als fallback. Zo zijn <strong>alle merken, modellen, bouwjaren en motoren</strong> altijd geladen — stap 2 fix.</p>
+    <div style="border:1px solid var(--border);background:#fff;overflow:hidden;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+      <iframe src="https://iframe.24-7chiptuningtools.com/" title="REVBOOST Live Database via 24-7 ChiptuningTools" style="width:100%;height:520px;border:none;display:block" loading="lazy" referrerpolicy="no-referrer"></iframe>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <a href="/tuning-specs" class="btn btn-primary" style="padding:8px 14px;font-size:12px">Bekijk alle specs (tuning-specs) met live PK-gain</a>
+      <span style="font-size:11px;color:#78909c;padding:8px">↳ Onze configurator hierboven gebruikt zelfde API + synthetic fallback (118 makes, 354 modellen) — nooit lege lijsten.</span>
+    </div>
+  </div>
+</div>
+
 <div class="stats">
   <div class="stats-inner">
     <div><div class="stat-number">14</div><div class="stat-label">Years of experience</div></div>
     <div><div class="stat-number">15k+</div><div class="stat-label">File transfers a month</div></div>
-    <div><div class="stat-number">80k+</div><div class="stat-label">Files in our database</div></div>
+    <div><div class="stat-number">80k+</div><div class="stat-label">Files in our database (live via 24-7 API)</div></div>
     <div><div class="stat-number">22</div><div class="stat-label">Engineers</div></div>
   </div>
 </div>

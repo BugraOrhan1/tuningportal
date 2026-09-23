@@ -295,7 +295,7 @@ app.post('/api/auth/register', async (req, res) => {
   saveJson('users.json', users);
   const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
   res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
-  res.json({ success: true, user: { id: user.id, name: user.name, email: user.email } });
+  res.json({ success: true, token, user: { id: user.id, name: user.name, email: user.email } });
 });
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
@@ -306,7 +306,7 @@ app.post('/api/auth/login', async (req, res) => {
   if (!ok) return res.status(400).json({ error: 'Onjuiste e-mail of wachtwoord' });
   const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
   res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
-  res.json({ success: true });
+  res.json({ success: true, token });
 });
 app.post('/api/auth/logout', (req, res) => {
   res.clearCookie('token');

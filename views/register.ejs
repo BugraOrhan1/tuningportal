@@ -20,10 +20,17 @@ document.getElementById('regForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
   const fd = new FormData(e.target);
   const body = Object.fromEntries(fd.entries());
-  const res = await fetch('/api/auth/register', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
-  const data = await res.json();
-  if(!res.ok){ document.getElementById('error').style.display='block'; document.getElementById('error').textContent = data.error; return; }
-  window.location = '/account';
+  const errBox=document.getElementById('error');
+  errBox.style.display='none';
+  try{
+    const res = await fetch('/api/auth/register', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body), credentials:'include'});
+    const data = await res.json();
+    if(!res.ok){ errBox.style.display='block'; errBox.textContent = data.error || 'Registreren mislukt'; return; }
+    if(data.token){ localStorage.setItem('token', data.token); document.cookie = 'token='+data.token+'; path=/; max-age=604800; SameSite=Lax'; }
+    window.location = '/account';
+  }catch(ex){
+    errBox.style.display='block'; errBox.textContent='Netwerkfout: '+ex.message;
+  }
 });
 </script>
 <%- include('partials/footer') %>

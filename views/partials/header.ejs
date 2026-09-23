@@ -22,6 +22,18 @@
     </div>
   </div>
 </div>
+<script>
+// Fallback: if token in localStorage but no cookie, set cookie for server-side auth (fixes preview same-site issues)
+try{
+  const t=localStorage.getItem('token');
+  if(t && !document.cookie.includes('token=')){
+    document.cookie='token='+t+'; path=/; max-age=604800; SameSite=Lax';
+  }
+  // If server says not logged in but token exists, try to refresh UI
+  const hasToken=!!localStorage.getItem('token');
+  window._revboostToken=hasToken?t:null;
+}catch(e){}
+</script>
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="/" class="logo">

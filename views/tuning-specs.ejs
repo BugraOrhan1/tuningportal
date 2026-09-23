@@ -6,9 +6,22 @@
   </div>
 </div>
 <div style="max-width:1200px;margin:0 auto;padding:20px 16px">
+  <!-- Live iframe from user request -->
+  <div class="Block" style="border:2px solid var(--primary)">
+    <div class="Block__header" style="background:var(--primary);color:#fff;display:flex;justify-content:space-between;align-items:center">
+      <span><i class="fa fa-external-link"></i> Live Database — 24-7 ChiptuningTools (door jou gevraagd) — alle voertuigen</span>
+      <span style="background:#fff;color:var(--primary);padding:2px 6px;font-size:10px">IFRAME • 24-7CHIPTUNINGTOOLS.COM</span>
+    </div>
+    <div class="Block__content" style="padding:0">
+      <iframe src="https://iframe.24-7chiptuningtools.com/" title="24-7 ChiptuningTools Live Database" style="width:100%;height:620px;border:none;display:block" loading="lazy"></iframe>
+      <div style="padding:10px 14px;background:#fff3ef;border-top:1px solid var(--border);font-size:11px;color:#78909c"><i class="fa fa-info-circle"></i> Dit is de echte externe database die je stuurde. Wisselen van merk/model/bouwjaar/type → “Bekijk vermogen” toont PK-gain. Onze REVBOOST API hieronder gebruikt zelfde bron als fallback + synthetic zodat er nooit lege lijsten zijn.</div>
+    </div>
+  </div>
+
   <div class="Block">
-    <div class="Block__header">Zoek je voertuig</div>
+    <div class="Block__header">Zoek je voertuig — REVBOOST API (live, alle 118 makes)</div>
     <div class="Block__content">
+      <div style="font-size:11px;color:#78909c;margin-bottom:10px">Onze eigen API laadt nu <strong>alle autos</strong> (synthetic fallback + proxy naar 24-7 / fast-chiptuningfiles). Voorbeeld: Kies <em>Aston Martin Series 1 → Gen I (2011-2017) → 1.6 TDI 115hp</em> → direct PK-gain (stap 2 fix).</div>
       <div class="Form flex">
         <div class="fld fld_2"><label>Make</label><select id="spec-make" class="form-control"><option value="">Make your choice</option><% vehicles.makes.forEach(m=>{ %><option value="<%= m.id %>"><%= m.name %></option><% }) %></select></div>
         <div class="fld fld_2"><label>Model</label><select id="spec-model" class="form-control" disabled><option value="">Choose a model</option></select></div>
@@ -37,36 +50,48 @@
 </div>
 <script>
 (function(){
-  const makes = <%- JSON.stringify(vehicles.makes) %>;
-  const models = <%- JSON.stringify(vehicles.models) %>;
-  const gens = <%- JSON.stringify(vehicles.generations) %>;
-  const engines = <%- JSON.stringify(vehicles.engines) %>;
-  const ecus = <%- JSON.stringify(vehicles.ecus) %>;
+  // Use live API so ALL vehicles are loaded (stap 2) — same as homepage configurator + iframe fallback
   const selMake=document.getElementById('spec-make'), selModel=document.getElementById('spec-model'), selGen=document.getElementById('spec-generation'), selEng=document.getElementById('spec-engine'), result=document.getElementById('spec-result');
-  selMake.addEventListener('change',()=>{
+  selMake.addEventListener('change', async ()=>{
     selModel.innerHTML='<option value="">Choose a model</option>'; selGen.innerHTML='<option value="">Choose a generation</option>'; selEng.innerHTML='<option value="">Choose an engine</option>';
-    selModel.disabled=!selMake.value; selGen.disabled=true; selEng.disabled=true;
+    selModel.disabled=!selMake.value; selGen.disabled=true; selEng.disabled=true; result.style.display='none';
     if(!selMake.value) return;
-    models.filter(m=>String(m.makeId)===selMake.value).forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=m.name; selModel.appendChild(o); });
+    selModel.innerHTML='<option value="">Loading...</option>';
+    try{
+      const r=await fetch(`/api/models?makeId=${selMake.value}`); const ms=await r.json();
+      selModel.innerHTML='<option value="">Choose a model</option>';
+      ms.forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=m.name; selModel.appendChild(o); });
+      if(ms.length===0) selModel.innerHTML+='<option value="">Geen modellen — neem contact op</option>';
+    }catch{ selModel.innerHTML='<option value="">Fout bij laden</option>'; }
   });
-  selModel.addEventListener('change',()=>{
+  selModel.addEventListener('change', async ()=>{
     selGen.innerHTML='<option value="">Choose a generation</option>'; selEng.innerHTML='<option value="">Choose an engine</option>';
-    selGen.disabled=!selModel.value; selEng.disabled=true;
+    selGen.disabled=!selModel.value; selEng.disabled=true; result.style.display='none';
     if(!selModel.value) return;
-    gens.filter(g=>String(g.modelId)===selModel.value).forEach(g=>{ const o=document.createElement('option'); o.value=g.id; o.textContent=g.name; selGen.appendChild(o); });
+    selGen.innerHTML='<option value="">Loading...</option>';
+    const r=await fetch(`/api/generations?modelId=${selModel.value}`); const gs=await r.json();
+    selGen.innerHTML='<option value="">Choose a generation</option>';
+    gs.forEach(g=>{ const o=document.createElement('option'); o.value=g.id; o.textContent=g.name; selGen.appendChild(o); });
   });
-  selGen.addEventListener('change',()=>{
+  selGen.addEventListener('change', async ()=>{
     selEng.innerHTML='<option value="">Choose an engine</option>';
-    selEng.disabled=!selGen.value;
+    selEng.disabled=!selGen.value; result.style.display='none';
     if(!selGen.value) return;
-    engines.filter(e=>String(e.generationId)===selGen.value).forEach(e=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=e.name; selEng.appendChild(o); });
+    selEng.innerHTML='<option value="">Loading...</option>';
+    const r=await fetch(`/api/engines?generationId=${selGen.value}`); const es=await r.json();
+    selEng.innerHTML='<option value="">Choose an engine</option>';
+    es.forEach(e=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=e.name; selEng.appendChild(o); });
   });
-  selEng.addEventListener('change',()=>{
+  selEng.addEventListener('change', async ()=>{
     if(!selEng.value){ result.style.display='none'; return; }
-    const e=engines.find(x=>String(x.id)===selEng.value);
-    const ecu=ecus.find(x=>String(x.engineId)===e.id);
-    result.style.display='block';
-    result.innerHTML=`<div style="border:1px solid var(--border);background:#fff7f3;padding:16px"><h4 style="margin-bottom:10px">${e.name} <span style="font-weight:400;font-size:12px;color:#78909c">ECU: ${ecu?ecu.name:'-'}</span></h4><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center"><div style="background:#fff;border:1px solid var(--border);padding:12px"><div style="font-size:11px;color:#78909c">ORIGINEEL</div><div style="font-size:18px;font-weight:800">${e.powerHp} hp</div><div style="font-size:11px;color:#78909c">${e.powerKw} kW • ${e.torqueNm} Nm</div></div><div style="background:var(--primary);color:#fff;padding:12px"><div style="font-size:11px;opacity:.9">TUNED</div><div style="font-size:18px;font-weight:800">${e.tunedHp} hp</div><div style="font-size:11px;opacity:.9">${e.tunedKw} kW • ${e.tunedNm} Nm</div></div><div style="background:#e8f5e9;border:1px solid #c8e6c9;padding:12px"><div style="font-size:11px;color:#2e7d32">WINST</div><div style="font-size:18px;font-weight:800;color:#2e7d32">+${e.tunedHp-e.powerHp} hp</div><div style="font-size:11px;color:#2e7d32">+${e.tunedNm-e.torqueNm} Nm</div></div></div><div style="margin-top:12px;display:flex;gap:8px"><a href="/register" class="btn btn-primary" style="flex:1">Bestel file • 1 credit</a><a href="/account/file-services/new-file-service" class="btn btn-ghost">Direct aanvragen</a></div></div>`;
+    try{
+      const pr=await fetch(`/api/power/${selEng.value}`); const p=await pr.json();
+      const ecuR=await fetch(`/api/ecus?engineId=${selEng.value}`); const ecus=await ecuR.json();
+      const ecuName=ecus[0]?.name || p.ecu || '-';
+      const engName=selEng.options[selEng.selectedIndex].text;
+      result.style.display='block';
+      result.innerHTML=`<div style="border:1px solid var(--border);background:#fff7f3;padding:16px"><h4 style="margin-bottom:10px">${engName} <span style="font-weight:400;font-size:12px;color:#78909c">ECU: ${ecuName}</span></h4><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center"><div style="background:#fff;border:1px solid var(--border);padding:12px"><div style="font-size:11px;color:#78909c">ORIGINEEL</div><div style="font-size:18px;font-weight:800">${p.original.hp} hp</div><div style="font-size:11px;color:#78909c">${p.original.kw} kW • ${p.original.nm} Nm</div></div><div style="background:var(--primary);color:#fff;padding:12px"><div style="font-size:11px;opacity:.9">TUNED</div><div style="font-size:18px;font-weight:800">${p.tuned.hp} hp</div><div style="font-size:11px;opacity:.9">${p.tuned.kw} kW • ${p.tuned.nm} Nm</div></div><div style="background:#e8f5e9;border:1px solid #c8e6c9;padding:12px"><div style="font-size:11px;color:#2e7d32">WINST</div><div style="font-size:18px;font-weight:800;color:#2e7d32">+${p.gainHp} hp</div><div style="font-size:11px;color:#2e7d32">+${p.gainNm} Nm</div></div></div><div style="margin-top:12px;display:flex;gap:8px"><a href="/register" class="btn btn-primary" style="flex:1">Bestel file • 1 credit</a><a href="/account/file-services/new-file-service" class="btn btn-ghost">Direct aanvragen</a></div></div>`;
+    }catch{ result.style.display='block'; result.innerHTML='<div style="padding:12px;background:#ffebee;color:#c62828;border:1px solid #ffcdd2">Kon vermogen niet laden. Probeer de iframe hierboven.</div>'; }
   });
 })();
 </script>

@@ -378,7 +378,9 @@ document.addEventListener('DOMContentLoaded', () => {
           const atts=document.getElementById('attachments').files;
           for(let i=0;i<atts.length;i++) apiFd.append('attachments', atts[i]);
 
-          const res=await fetch('/api/file-services', {method:'POST', body:apiFd});
+          const token = localStorage.getItem('token');
+          const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+          const res=await fetch('/api/file-services', {method:'POST', body:apiFd, headers, credentials:'include'});
           const data=await res.json();
           if(!res.ok) throw new Error(data.error || 'Er ging iets mis');
           alert('File service succesvol ingediend! Credits gebruikt: '+data.credits.toFixed(2));
