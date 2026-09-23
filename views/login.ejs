@@ -3,33 +3,56 @@
   <div class="auth-card">
     <h1>Inloggen — <%= brand ? brand.name : 'REVBOOST' %></h1>
     <p>Log in bij je <strong><%= brand ? brand.name : 'REVBOOST' %></strong> klanten file-panel. Alleen klanten met account hebben toegang tot file services. Uniek merk — alle autos via live API.</p>
+    <% if (typeof error !== 'undefined' && error) { %><div class="error-box" style="display:block"><%= error %></div><% } %>
     <div id="error" class="error-box" style="display:none"></div>
-    <form id="loginForm">
+    <div id="js-hint" style="font-size:11px;color:#c62828;display:none;margin-bottom:8px">JS uit? Formulier wordt normaal verstuurd — je wordt doorgestuurd.</div>
+    <form id="loginForm" action="/login" method="POST">
       <div class="form-group"><label>E-mail</label><input name="email" type="email" required placeholder="jouw@email.com"></div>
       <div class="form-group"><label>Wachtwoord</label><input name="password" type="password" required placeholder="••••••••"></div>
       <input type="hidden" name="redirect" value="<%= redirect %>">
-      <button class="btn btn-primary" style="width:100%" type="submit">Inloggen</button>
+      <button class="btn btn-primary" style="width:100%" type="submit" id="loginBtn">Inloggen</button>
     </form>
     <p style="margin-top:14px;text-align:center;font-size:12px">Nog geen account? <a href="/register">Registreren</a> • <a href="/">Terug naar website</a></p>
     <div style="margin-top:16px;padding:10px;background:#fff3ef;border:1px solid #ffccb3;font-size:11px"><strong>Demo account:</strong><br>Maak eerst een account via Registreren, of gebruik: <strong>demo@revboost.nl / demo123</strong> (ook demo@fast.local werkt)</div>
   </div>
 </div>
 <script>
-document.getElementById('loginForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const fd = new FormData(e.target);
-  const body = Object.fromEntries(fd.entries());
+(function(){
+  const form=document.getElementById('loginForm');
   const errBox=document.getElementById('error');
-  errBox.style.display='none';
-  try{
-    const res = await fetch('/api/auth/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body), credentials:'include'});
-    const data = await res.json();
-    if(!res.ok){ errBox.style.display='block'; errBox.textContent = data.error || 'Inloggen mislukt'; return; }
-    if(data.token){ localStorage.setItem('token', data.token); document.cookie = 'token='+data.token+'; path=/; max-age=604800; SameSite=Lax'; }
-    window.location = body.redirect || '/account';
-  }catch(ex){
-    errBox.style.display='block'; errBox.textContent='Netwerkfout: '+ex.message;
-  }
-});
+  const btn=document.getElementById('loginBtn');
+  // if JS works, hide fallback hint
+  document.getElementById('js-hint').style.display='none';
+  form.addEventListener('submit', async (e)=>{
+    // Always try JS first; if it fails, allow normal POST fallback
+    e.preventDefault();
+    const fd = new FormData(form);
+    const body = Object.fromEntries(fd.entries());
+    // robust redirect: hidden field OR url param
+    const urlRedirect = new URLSearchParams(window.location.search).get('redirect');
+    const targetRedirect = body.redirect || urlRedirect || dataRedirectFallback();
+    function dataRedirectFallback(){ try{ return '<%= redirect %>'; } catch{ return '/account'; } }
+    const redirectTo = targetRedirect && targetRedirect.startsWith('/') ? targetRedirect : '/account';
+    errBox.style.display='none';
+    btn.disabled=true; const oldText=btn.textContent; btn.textContent='Inloggen...';
+    try{
+      const res = await fetch('/api/auth/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({...body, redirect: redirectTo}), credentials:'include'});
+      let data={};
+      const ct=res.headers.get('content-type')||'';
+      if(ct.includes('application/json')) data=await res.json(); else data={error: await res.text()};
+      if(!res.ok){ errBox.style.display='block'; errBox.textContent = data.error || 'Inloggen mislukt (code '+res.status+')'; btn.disabled=false; btn.textContent=oldText; return; }
+      if(data.token){ try{ localStorage.setItem('token', data.token); }catch{} document.cookie = 'token='+data.token+'; path=/; max-age=604800; SameSite=Lax'; }
+      // kleine delay zodat cookie gezet is, dan hard redirect
+      window.location.href = data.redirect || redirectTo || '/account';
+      setTimeout(()=>{ window.location.href = data.redirect || redirectTo || '/account'; }, 300);
+    }catch(ex){
+      console.error(ex);
+      // Fallback: direct POST naar /login (form.submit bypassed de JS listener)
+      errBox.style.display='block'; errBox.textContent='JS inloggen mislukt, probeer normale login…';
+      setTimeout(()=>{ try{ HTMLFormElement.prototype.submit.call(form); }catch{ form.submit(); } }, 400);
+      btn.disabled=false; btn.textContent=oldText;
+    }
+  });
+})();
 </script>
 <%- include('partials/footer') %>

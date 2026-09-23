@@ -25,5 +25,14 @@
     "password": "$2b$10$LRzofBgG6tvwp0BSrq5Md.VFjuBI95ONCHGULKioDYr9HgbkbFRui",
     "credits": 10,
     "createdAt": "2026-09-23T19:49:45.611Z"
+  },
+  {
+    "id": "eeda8cf5-9609-475d-879a-831ca3c06a76",
+    "name": "bugra orhan",
+    "email": "pobugra@gmail.com",
+    "company": "bb",
+    "password": "$2b$10$x/323JnrLEIHCeWIlzWtUe4kuLVED9KAcZTT/dHnuodxyEytNOBZC",
+    "credits": 2,
+    "createdAt": "2026-09-23T20:00:13.610Z"
   }
 ]

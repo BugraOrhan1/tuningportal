@@ -298,7 +298,7 @@ app.post('/api/auth/register', async (req, res) => {
   res.json({ success: true, token, user: { id: user.id, name: user.name, email: user.email } });
 });
 app.post('/api/auth/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, redirect } = req.body;
   const users = loadJson('users.json');
   const user = users.find(u => u.email.toLowerCase() === String(email).toLowerCase());
   if (!user) return res.status(400).json({ error: 'Onjuiste e-mail of wachtwoord' });
@@ -306,7 +306,36 @@ app.post('/api/auth/login', async (req, res) => {
   if (!ok) return res.status(400).json({ error: 'Onjuiste e-mail of wachtwoord' });
   const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
   res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
-  res.json({ success: true, token });
+  // also return redirect so JS can use it
+  res.json({ success: true, token, redirect: redirect || req.body.redirect || '/account' });
+});
+// Traditional form POST fallback so login works even when JS fails / “stuurt me nergens heen”
+app.post('/login', async (req, res) => {
+  const { email, password, redirect } = req.body;
+  const users = loadJson('users.json');
+  const user = users.find(u => u.email.toLowerCase() === String(email).toLowerCase());
+  if (!user) return res.status(400).render('login', { redirect: redirect || '/account', error: 'Onjuiste e-mail of wachtwoord', brand: BRAND });
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) return res.status(400).render('login', { redirect: redirect || '/account', error: 'Onjuiste e-mail of wachtwoord', brand: BRAND });
+  const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
+  res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
+  const target = redirect && redirect.startsWith('/') ? redirect : '/account';
+  return res.redirect(target);
+});
+app.post('/register', async (req, res) => {
+  const { name, email, password, company } = req.body;
+  if (!name || !email || !password) return res.status(400).render('register', { error: 'Naam, e-mail en wachtwoord zijn verplicht', brand: BRAND });
+  const users = loadJson('users.json');
+  if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+    return res.status(400).render('register', { error: 'E-mail is al geregistreerd', brand: BRAND });
+  }
+  const hashed = await bcrypt.hash(password, 10);
+  const user = { id: uuidv4(), name, email, company: company || '', password: hashed, credits: 2.0, createdAt: new Date().toISOString() };
+  users.push(user);
+  saveJson('users.json', users);
+  const token = jwt.sign({ id: user.id, name: user.name, email: user.email, company: user.company, credits: user.credits }, JWT_SECRET, { expiresIn: '7d' });
+  res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7*24*60*60*1000 });
+  return res.redirect('/account');
 });
 app.post('/api/auth/logout', (req, res) => {
   res.clearCookie('token');

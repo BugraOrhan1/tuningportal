@@ -3,34 +3,41 @@
   <div class="auth-card">
     <h1>Account aanmaken — <%= brand ? brand.name : 'REVBOOST' %></h1>
     <p>Maak een <strong><%= brand ? brand.name : 'REVBOOST' %></strong> klanten account aan voor toegang tot het file-panel. Uniek merk, alle voertuigen via live API.</p>
+    <% if (typeof error !== 'undefined' && error) { %><div class="error-box" style="display:block"><%= error %></div><% } %>
     <div id="error" class="error-box" style="display:none"></div>
-    <form id="regForm">
+    <form id="regForm" action="/register" method="POST">
       <div class="form-group"><label>Naam *</label><input name="name" required placeholder="Bugra Orhan"></div>
       <div class="form-group"><label>Bedrijfsnaam (optioneel)</label><input name="company" placeholder="REVBOOST Performance BV"></div>
       <div class="form-group"><label>E-mail *</label><input name="email" type="email" required placeholder="jouw@email.com"></div>
       <div class="form-group"><label>Wachtwoord *</label><input name="password" type="password" required placeholder="Min. 6 tekens"></div>
       <label style="font-size:11px;display:flex;gap:6px;margin:10px 0"><input type="checkbox" required style="width:auto"> Ik ga akkoord met <a href="/legal/terms-and-conditions">Terms and conditions</a> en <a href="/legal/refund-policy">Refund policy</a></label>
-      <button class="btn btn-primary" style="width:100%" type="submit">Registreren</button>
+      <button class="btn btn-primary" style="width:100%" type="submit" id="regBtn">Registreren</button>
     </form>
     <p style="margin-top:14px;text-align:center;font-size:12px">Al een account? <a href="/login">Inloggen</a></p>
   </div>
 </div>
 <script>
-document.getElementById('regForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const fd = new FormData(e.target);
-  const body = Object.fromEntries(fd.entries());
+(function(){
+  const form=document.getElementById('regForm');
   const errBox=document.getElementById('error');
-  errBox.style.display='none';
-  try{
-    const res = await fetch('/api/auth/register', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body), credentials:'include'});
-    const data = await res.json();
-    if(!res.ok){ errBox.style.display='block'; errBox.textContent = data.error || 'Registreren mislukt'; return; }
-    if(data.token){ localStorage.setItem('token', data.token); document.cookie = 'token='+data.token+'; path=/; max-age=604800; SameSite=Lax'; }
-    window.location = '/account';
-  }catch(ex){
-    errBox.style.display='block'; errBox.textContent='Netwerkfout: '+ex.message;
-  }
-});
+  const btn=document.getElementById('regBtn');
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const fd=new FormData(form);
+    const body=Object.fromEntries(fd.entries());
+    errBox.style.display='none'; btn.disabled=true; const old=btn.textContent; btn.textContent='Bezig...';
+    try{
+      const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),credentials:'include'});
+      const data=await res.json();
+      if(!res.ok){ errBox.style.display='block'; errBox.textContent=data.error||'Registreren mislukt'; btn.disabled=false; btn.textContent=old; return; }
+      if(data.token){ try{localStorage.setItem('token',data.token);}catch{} document.cookie='token='+data.token+'; path=/; max-age=604800; SameSite=Lax'; }
+      window.location.href='/account'; setTimeout(()=>window.location.href='/account',300);
+    }catch(ex){
+      console.error(ex); errBox.style.display='block'; errBox.textContent='Netwerkfout, probeer normale registratie…';
+      setTimeout(()=>{ try{ HTMLFormElement.prototype.submit.call(form); }catch{ form.submit(); } },400);
+      btn.disabled=false; btn.textContent=old;
+    }
+  });
+})();
 </script>
 <%- include('partials/footer') %>
