@@ -10,14 +10,14 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'mijndomein-secret-2025-unique-tuning';
+const JWT_SECRET = process.env.JWT_SECRET || 'dashfix-secret-2025-tuningportal-dashfix';
 const BRAND = {
-  name: 'MIJNDOMEIN',
-  full: 'MIJNDOMEIN Performance Files',
+  name: 'DASHFIX',
+  full: 'DASHFIX TuningPortal',
   tagline: 'High-Performance ECU Tuning Files',
-  email: 'info@mijndomein.nl',
+  email: 'info@dashfix.nl',
   phone: '+31 85 060 00 33',
-  domain: 'mijndomein.nl'
+  domain: 'tuningportal.dashfix.nl'
 };
 
 app.set('trust proxy', 1);
