@@ -1,0 +1,7 @@
+uploads/*.js
+uploads/*.bin
+uploads/*.hex
+uploads/*.ori
+uploads/*.zip
+uploads/*.rar
+!uploads/.gitkeep

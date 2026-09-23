@@ -1,0 +1,56 @@
+[
+  {
+    "id": "e3fb63bd-a9bd-4c1a-8197-6532736ddc58",
+    "name": "Bugra Orhan",
+    "email": "bugra@test.com",
+    "company": "Test BV",
+    "password": "$2b$10$enTvJ1S5wAPgs8wWDOtWeuywVhpOnQqcjBzOw.bmk77XbM3Te4Sfu",
+    "credits": 2,
+    "createdAt": "2026-09-23T19:45:43.224Z"
+  },
+  {
+    "id": "38b9a52e-f758-4ff2-b260-544c17e109b8",
+    "name": "Demo User",
+    "email": "demo@fast.local",
+    "company": "Fast-Tuningshop",
+    "password": "$2b$10$qThzbbtxw8WpzS1eGbRqGek2QjJeZ8cm2CEDs1R.cHvNKIk8yVHq6",
+    "credits": 5,
+    "createdAt": "2026-09-23T19:45:49.533Z"
+  },
+  {
+    "id": "797bb42a-b95a-43d0-92b3-efa18e3484ea",
+    "name": "Demo REVBOOST",
+    "email": "demo@revboost.nl",
+    "company": "REVBOOST",
+    "password": "$2b$10$LRzofBgG6tvwp0BSrq5Md.VFjuBI95ONCHGULKioDYr9HgbkbFRui",
+    "credits": 10,
+    "createdAt": "2026-09-23T19:49:45.611Z"
+  },
+  {
+    "id": "eeda8cf5-9609-475d-879a-831ca3c06a76",
+    "name": "bugra orhan",
+    "email": "pobugra@gmail.com",
+    "company": "bb",
+    "password": "$2b$10$x/323JnrLEIHCeWIlzWtUe4kuLVED9KAcZTT/dHnuodxyEytNOBZC",
+    "credits": 2,
+    "createdAt": "2026-09-23T20:00:13.610Z"
+  },
+  {
+    "id": "ced9d241-82e0-4d5b-a314-b35055311d22",
+    "name": "Demo MIJNDOMEIN",
+    "email": "demo@mijndomein.nl",
+    "company": "MIJNDOMEIN",
+    "password": "$2b$10$LRzofBgG6tvwp0BSrq5Md.VFjuBI95ONCHGULKioDYr9HgbkbFRui",
+    "credits": 10,
+    "createdAt": "2026-09-23T21:08:29.148843Z"
+  },
+  {
+    "id": "2bc2cf21-27ee-4f10-8367-714e4ac2ee54",
+    "name": "Demo DASHFIX",
+    "email": "demo@dashfix.nl",
+    "company": "DASHFIX",
+    "password": "$2b$10$LRzofBgG6tvwp0BSrq5Md.VFjuBI95ONCHGULKioDYr9HgbkbFRui",
+    "credits": 10,
+    "createdAt": "2026-09-23T21:41:05.879954Z"
+  }
+]
