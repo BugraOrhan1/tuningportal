@@ -212,52 +212,100 @@ app.get('/api/power/:engineId', (req, res) => {
   });
 });
 
-// Try to proxy real Dragonfly type-loader API if reachable, otherwise use local
+// Exact type-loader as in dashboard.fast-chiptuningfiles.com export — handles ?make=&model=&generation=&engine=&ecu=&language=
+// Returns {choices:{makes:[],models:[],generations:[],engines:[],ecus:[]}, selected:{make,model,generation,engine,ecu}, url:"..."}
 app.get('/api/v1/type-loader', async (req, res) => {
-  // Attempt to fetch real API with fetch, fallback to local synthetic
+  // Try proxy first (keep original behaviour) but with fast timeout
   const tryProxy = async () => {
     try {
       const target = 'https://dashboard.fast-chiptuningfiles.com/api/v1/type-loader';
       const url = new URL(target);
       Object.keys(req.query).forEach(k=>url.searchParams.set(k, req.query[k]));
       const controller = new AbortController();
-      const timeout = setTimeout(()=>controller.abort(), 4000);
-      const r = await fetch(url.toString(), {
-        signal: controller.signal,
-        headers: { 'User-Agent': 'REVBOOST-Proxy/1.0', 'Accept': 'application/json' }
-      });
+      const timeout = setTimeout(()=>controller.abort(), 2500);
+      const r = await fetch(url.toString(), { signal: controller.signal, headers: { 'User-Agent': 'REVBOOST-Proxy/1.0', 'Accept': 'application/json' } });
       clearTimeout(timeout);
-      if (r.ok) {
-        const j = await r.json();
-        return res.json(j);
-      }
-    } catch (e) { /* fallback */ }
+      if (r.ok) { const j = await r.json(); if(j && j.choices) return res.json(j); }
+    } catch {}
     return null;
   };
+  // Support legacy ?type=make&parent= style as well (for REVBOOST internal calls)
+  if(req.query.type){
+    const v = loadVehicles();
+    const { type, parent } = req.query;
+    if (type === 'make' || !type) return res.json({choices:{makes: v.makes.map(m=>({id:m.id,name:m.name,urlname:m.name.toLowerCase().replace(/\s+/g,'-')})), models:[], generations:[], engines:[], ecus:[]}, selected:{make:null,model:null,generation:null,engine:null,ecu:null}, url:"https://dashboard.fast-chiptuningfiles.com/tuning-specs/makes"});
+    if (type === 'model' && parent) {
+      const ms = syntheticModelsForMake(parent, v);
+      return res.json({choices:{makes:[], models: ms.map(m=>({id:m.id,name:m.name,urlname:m.name.toLowerCase().replace(/\s+/g,'-')})), generations:[], engines:[], ecus:[]}, selected:{make:parent,model:null,generation:null,engine:null,ecu:null}, url:""});
+    }
+    if (type === 'generation' && parent) {
+      const gs = syntheticGenerationsForModel(parent, v);
+      return res.json({choices:{makes:[], models:[], generations: gs.map(g=>({id:g.id,name:g.name,urlname:g.name.toLowerCase().replace(/\s+/g,'-')})), engines:[], ecus:[]}, selected:{make:null,model:parent,generation:null,engine:null,ecu:null}, url:""});
+    }
+    if (type === 'engine' && parent) {
+      const es = syntheticEnginesForGeneration(parent, v);
+      return res.json({choices:{makes:[], models:[], generations:[], engines: es.map(e=>({id:e.id,name:e.name,urlname:e.name.toLowerCase().replace(/\s+/g,'-'), fuel_type_id: e.fuel==='Diesel'?1:2, octane_rating_required:0, in_development:false})), ecus:[]}, selected:{make:null,model:null,generation:parent,engine:null,ecu:null}, url:""});
+    }
+    if (type === 'ecu' && parent) {
+      const ec = syntheticEcuForEngine(parent, v);
+      return res.json({choices:{makes:[], models:[], generations:[], engines:[], ecus: ec.map(e=>({id:e.id,name:e.name,urlname:e.name.toLowerCase().replace(/\s+/g,'-')}))}, selected:{}, url:""});
+    }
+  }
   const proxied = await tryProxy();
-  if (proxied) return;
-  // Fallback to local handling based on query param 'type' style of dragonfly
-  // dragonfly expects ?type=make etc. We'll support generic
-  const { type, parent } = req.query;
+  if(proxied) return;
+  // Main handler for ?make=&model=&generation=&engine=&ecu=&language= (export exact)
   const v = loadVehicles();
-  if (type === 'make' || !type) return res.json(v.makes.map(m=>({ id:m.id, name:m.name })));
-  if (type === 'model' && parent) {
-    const ms = syntheticModelsForMake(parent, v);
-    return res.json(ms.map(m=>({ id:m.id, name:m.name })));
+  const make = req.query.make || req.query['vehicle[make_id]'] || '';
+  const model = req.query.model || req.query['vehicle[model_id]'] || '';
+  const generation = req.query.generation || req.query['vehicle[generation_id]'] || '';
+  const engine = req.query.engine || req.query['vehicle[engine_id]'] || '';
+  const ecu = req.query.ecu || req.query['vehicle[ecu_id]'] || '';
+
+  // Always return makes
+  const makes = v.makes.map(m=>({id:m.id, name:m.name, urlname: m.name.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,''), fuel_type_id:null, octane_rating_required:0, in_development:false }));
+  let models = [], generations = [], engines = [], ecus = [];
+
+  // Helper to check if value is valid (not empty, not "other")
+  const isValid = (val)=> val && val !== 'other' && val !== '' && val !== '0';
+
+  if(isValid(make)){
+    models = syntheticModelsForMake(make, v).map(m=>({id:m.id, name:m.name, urlname: m.name.toLowerCase().replace(/\s+/g,'-'), make_id: make}));
   }
-  if (type === 'generation' && parent) {
-    const gs = syntheticGenerationsForModel(parent, v);
-    return res.json(gs.map(g=>({ id:g.id, name:g.name })));
+  if(isValid(model)){
+    // model could be synthetic id like 90001, but we need to find its make
+    generations = syntheticGenerationsForModel(model, v).map(g=>({id:g.id, name:g.name, urlname: g.name.toLowerCase().replace(/\s+/g,'-'), model_id: model}));
   }
-  if (type === 'engine' && parent) {
-    const es = syntheticEnginesForGeneration(parent, v);
-    return res.json(es.map(e=>({ id:e.id, name:e.name })));
+  if(isValid(generation)){
+    engines = syntheticEnginesForGeneration(generation, v).map(e=>({
+      id:e.id, name:e.name, urlname: e.name.toLowerCase().replace(/\s+/g,'-'),
+      fuel_type_id: e.fuel==='Diesel'?1:2,
+      octane_rating_required:0,
+      in_development:false,
+      tuning_option_instructions: [],
+      power_hp: e.powerHp, power_kw: e.powerKw, torque_nm: e.torqueNm
+    }));
+    // Engines can be grouped by fuel type in real API? We return flat array (frontend handles both)
   }
-  if (type === 'ecu' && parent) {
-    const ec = syntheticEcuForEngine(parent, v);
-    return res.json(ec.map(e=>({ id:e.id, name:e.name })));
+  if(isValid(engine)){
+    ecus = syntheticEcuForEngine(engine, v).map(e=>({id:e.id, name:e.name, urlname: e.name.toLowerCase().replace(/\s+/g,'-'), engine_id: engine}));
   }
-  res.json([]);
+
+  // Build selected
+  const selected = {
+    make: isValid(make) ? make : null,
+    model: isValid(model) ? model : null,
+    generation: isValid(generation) ? generation : null,
+    engine: isValid(engine) ? engine : null,
+    ecu: isValid(ecu) ? ecu : null
+  };
+
+  // URL for info button – mimic export: when all selected, give tuning-specs URL
+  let url = "https://dashboard.fast-chiptuningfiles.com/tuning-specs/makes";
+  if(isValid(make) && isValid(model) && isValid(generation) && isValid(engine)){
+    url = `https://dashboard.fast-chiptuningfiles.com/tuning-specs/makes/${make}/models/${model}/generations/${generation}/engines/${engine}`;
+  }
+
+  res.json({choices:{makes, models, generations, engines, ecus}, selected, url});
 });
 
 // External vehicle API proxy (mychiptuningfiles/mod-files style) — ensures all vehicles available via standard endpoint
@@ -346,65 +394,148 @@ app.get('/api/me', (req, res) => {
   res.json(req.user);
 });
 
-app.post('/api/file-services', requireAuth, upload.fields([{ name: 'originalFile', maxCount: 1 }, { name: 'tcuFile', maxCount: 1 }, { name: 'attachments', maxCount: 5 }]), (req, res) => {
+app.post('/api/file-services', requireAuth, upload.any(), (req, res) => {
   const data = req.body;
-  const files = req.files;
+  const filesArray = Array.isArray(req.files) ? req.files : [];
+  const filesByField = {};
+  filesArray.forEach(f=>{ if(!filesByField[f.fieldname]) filesByField[f.fieldname]=[]; filesByField[f.fieldname].push(f); });
+  const files = filesByField;
   const services = loadJson('fileServices.json');
   const t = loadTuningTypes();
-  const tuningType = t.tuningTypes.find(x => String(x.id) === String(data.tuning_type_id));
+  // Normalize vehicle/tuning/type fields to support both flat (make_id) and nested (vehicle[make_id]) styles
+  const veh = data.vehicle || {};
+  const tun = data.tuning || {};
+  const typ = data.type || {};
+  const extra = data.extra || {};
+  const modForm = data.modified_parts_form || {};
+  const fileObj = data.file || {};
+  const getVal = (flatKey, nestedObj, nestedKey) => {
+    if(data[flatKey] !== undefined) return data[flatKey];
+    if(nestedObj && nestedObj[nestedKey] !== undefined) return nestedObj[nestedKey];
+    // also try bracket notation like vehicle[make_id] as string key
+    const bracket = `${Object.keys({vehicle:1,tuning:1,type:1,extra:1,file:1,modified_parts_form:1}).find(k=> flatKey.startsWith(k) )? '': ''}`;
+    return undefined;
+  };
+  // Prefer nested if exists, fallback flat
+  const make_id = veh.make_id || data.make_id || data['vehicle[make_id]'];
+  const model_id = veh.model_id || data.model_id || data['vehicle[model_id]'];
+  const generation_id = veh.generation_id || data.generation_id || data['vehicle[generation_id]'];
+  const engine_id = veh.engine_id || data.engine_id || data['vehicle[engine_id]'];
+  const ecu_id = veh.ecu_id || data.ecu_id || data['vehicle[ecu_id]'];
+  const make = veh.make || data.make || data['vehicle[make]'];
+  const model = veh.model || data.model || data['vehicle[model]'];
+  const generation = veh.generation || data.generation || data['vehicle[generation]'];
+  const engineNameRaw = veh.engine || data.engine || data['vehicle[engine]'];
+  const ecuRaw = veh.ecu || data.ecu || data['vehicle[ecu]'];
+  const power_hp = veh.power_hp || data.power_hp || veh.power_hp || data['vehicle[power_hp]'];
+  const power_kw = veh.power_kw || data.power_kw || data['vehicle[power_kw]'];
+  const year = veh.year || data.year || data['vehicle[year]'];
+  const gearbox_id = veh.gearbox_id || data.gearbox_id || data['vehicle[gearbox_id]'];
+  const gearbox = veh.gearbox || data.gearbox;
+  const license_plate = veh.license_plate || data.license_plate || data['vehicle[license_plate]'];
+  const vin = veh.vin || data.vin || data['vehicle[vin]'];
+  const octane_rating = veh.octane_rating || data.octane_rating || data['vehicle[octane_rating]'];
+
+  const tool_type = tun.tool_type || data.tool_type || data['tuning[tool_type]'];
+  const read_method_id = tun.read_method_id || data.read_method_id || data['tuning[read_method_id]'];
+  const read_method_other = tun.read_method_other || data.read_method_other || data['tuning[read_method_other]'];
+  const hardware_number = tun.hardware_number || data.hardware_number || data['tuning[hardware_number]'];
+  const software_number = tun.software_number || data.software_number || data['tuning[software_number]'];
+
+  let tuning_type_id = typ.tuning_type_id || data.tuning_type_id || data['type[tuning_type_id]'];
+  // Handle case where typ is nested differently
+  if(!tuning_type_id && data['type[tuning_type_id]']) tuning_type_id = data['type[tuning_type_id]'];
+
+  const tuningType = t.tuningTypes.find(x => String(x.id) === String(tuning_type_id));
   let totalCredits = tuningType ? tuningType.credits : 0;
+  // Options handling: support both old data.options JSON and new type[option_group_...] nested
+  let options = [];
+  let optionDetails = {};
   if (data.options) {
     try {
       const opts = typeof data.options === 'string' ? JSON.parse(data.options) : data.options;
       if (Array.isArray(opts)) {
+        options = opts;
         opts.forEach(o => {
-          const group = t.optionsByType[String(data.tuning_type_id)] || [];
+          const group = t.optionsByType[String(tuning_type_id)] || [];
           const opt = group.find(g => String(g.id) === String(o));
           if (opt) totalCredits += opt.credits;
         });
       }
     } catch {}
+  } else if(data.type){
+    // Parse new style: type[option_group_XXXX][tuning_options_list][XXXX][enabled]
+    const typeObj = data.type;
+    Object.keys(typeObj).forEach(k=>{
+      if(k.startsWith('option_group_') && typeObj[k] && typeObj[k].tuning_options_list){
+        Object.keys(typeObj[k].tuning_options_list).forEach(optId=>{
+          const opt = typeObj[k].tuning_options_list[optId];
+          if(opt && (opt.enabled === '1' || opt.enabled === 1 || opt.enabled === true || opt.enabled === 'on')){
+            options.push(optId);
+            optionDetails[optId] = { rpm: opt.rpm || '', loudness: opt.loudness || '', diagnostic_trouble_codes: opt.diagnostic_trouble_codes || '', ...opt };
+            const groupOpts = t.optionsByType[String(tuning_type_id)] || [];
+            const def = groupOpts.find(g=>String(g.id)===String(optId));
+            if(def) totalCredits += def.credits;
+          }
+        });
+      }
+    });
   }
+  if(data.optionDetails && !Object.keys(optionDetails).length){
+    try { optionDetails = typeof data.optionDetails === 'string' ? JSON.parse(data.optionDetails) : data.optionDetails; } catch {}
+  }
+  const has_modified_parts = modForm.has_modified_parts || data.has_modified_parts || data['modified_parts_form[has_modified_parts]'];
+  const modified_parts_remarks = modForm.modified_parts_remarks || data.modified_parts_remarks || data['modified_parts_form[modified_parts_remarks]'];
+  const modified_details = data.modified_details || (modForm.modified_parts && modForm.modified_parts['modified_parts_installed?'] && modForm.modified_parts['modified_parts_installed?'].remarks) || '';
+  const time_frame = extra.time_frame || data.time_frame || data['extra[time_frame]'];
+  const info = extra.info || data.info || data['extra[info]'];
+  const terms = extra.terms_and_conditions || data.terms_and_conditions || data['extra[terms_and_conditions]'];
+  const refund = extra.refund_policy || data.refund_policy || data['extra[refund_policy]'];
+
+  const getFileByNames = (names)=>{
+    for(const n of names){
+      if(files[n] && files[n][0]) return files[n][0];
+      const found = filesArray.find(f=>f.fieldname===n);
+      if(found) return found;
+    }
+    // also check for bracket style in filesArray
+    const found2 = filesArray.find(f=> names.some(n=> f.fieldname.includes(n.replace('file','').replace(/[\[\]]/g,'')) ));
+    return null;
+  };
+  // For exact clone, original file may be sent as file[original_asset_id] hidden or as file upload
   const entry = {
     id: uuidv4(),
     userId: req.user.id,
     userEmail: req.user.email,
     vehicle: {
-      make_id: data.make_id, make: data.make, makeName: data.makeName,
-      model_id: data.model_id, modelName: data.modelName,
-      generation_id: data.generation_id, generationName: data.generationName,
-      engine_id: data.engine_id, engineName: data.engineName,
-      ecu_id: data.ecu_id, ecuName: data.ecuName,
-      power_hp: data.power_hp, power_kw: data.power_kw,
-      year: data.year, gearbox_id: data.gearbox_id, gearbox: data.gearbox,
-      license_plate: data.license_plate, vin: data.vin, octane_rating: data.octane_rating
+      make_id, make, makeName: make,
+      model_id, modelName: model,
+      generation_id, generationName: generation,
+      engine_id, engineName: engineNameRaw,
+      ecu_id, ecuName: ecuRaw,
+      power_hp, power_kw,
+      year, gearbox_id, gearbox,
+      license_plate, vin, octane_rating
     },
     ecuDetails: {
-      tool_type: data.tool_type,
-      read_method_id: data.read_method_id, read_method_other: data.read_method_other,
-      hardware_number: data.hardware_number, software_number: data.software_number
+      tool_type, read_method_id, read_method_other,
+      hardware_number, software_number
     },
     tuning: {
-      tuning_type_id: data.tuning_type_id,
+      tuning_type_id,
       tuning_type_label: tuningType ? tuningType.label : '',
-      options: data.options ? (typeof data.options === 'string' ? JSON.parse(data.options) : data.options) : [],
-      optionDetails: data.optionDetails ? JSON.parse(data.optionDetails) : {}
+      options, optionDetails
     },
     files: {
-      original: files['originalFile'] ? { filename: files['originalFile'][0].filename, originalname: files['originalFile'][0].originalname, path: '/uploads/' + files['originalFile'][0].filename } : null,
-      tcu: files['tcuFile'] ? { filename: files['tcuFile'][0].filename, originalname: files['tcuFile'][0].originalname, path: '/uploads/' + files['tcuFile'][0].filename } : null,
-      attachments: files['attachments'] ? files['attachments'].map(f => ({ filename: f.filename, originalname: f.originalname, path: '/uploads/' + f.filename })) : []
+      original: (()=>{ const f = getFileByNames(['originalFile','file[original_asset_id]','file[original_asset_id][]']); if(f) return { filename: f.filename, originalname: f.originalname, path: '/uploads/' + f.filename }; if(fileObj.original_asset_id) return { asset_id: fileObj.original_asset_id }; if(data['file[original_asset_id]']) return { asset_id: data['file[original_asset_id]'] }; return null; })(),
+      tcu: (()=>{ const f = getFileByNames(['tcuFile','file[tcu_asset_id]']); if(f) return { filename: f.filename, originalname: f.originalname, path: '/uploads/' + f.filename }; if(fileObj.tcu_asset_id) return { asset_id: fileObj.tcu_asset_id }; return null; })(),
+      attachments: filesArray.filter(f=> f.fieldname.includes('attachments') || f.fieldname.includes('file[attachments')).map(f => ({ filename: f.filename, originalname: f.originalname, path: '/uploads/' + f.filename }))
     },
     modifiedParts: {
-      has_modified_parts: data.has_modified_parts,
-      modified_parts_remarks: data.modified_parts_remarks,
-      modified_details: data.modified_details
+      has_modified_parts, modified_parts_remarks, modified_details
     },
     service: {
-      time_frame: data.time_frame,
-      info: data.info,
-      terms: data.terms_and_conditions,
-      refund: data.refund_policy
+      time_frame, info, terms, refund
     },
     credits: totalCredits,
     status: 'processing',

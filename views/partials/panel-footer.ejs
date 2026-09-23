@@ -1,6 +1,68 @@
     </main>
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/cms/plugins.js"></script>
+<script src="/js/cms/app.js"></script>
 <script src="/js/app.js"></script>
+<script>
+// Fallback for exact clone form if cms app.js not handling type-loader ( ensures alle autos via API )
+(function(){
+  const form = document.getElementById('file-service');
+  if(!form || !form.dataset.typeLoaderUrl) return;
+  // If jQuery not handling, our vanilla fallback will ensure makes are loaded
+  const selects = form.querySelectorAll('[data-type-loader]');
+  if(selects.length && !window._cmsTypeLoaderInitialized){
+    // Simple vanilla fallback using our exact API
+    const url = form.dataset.typeLoaderUrl;
+    async function loadChoices(params){
+      try{
+        const qs = new URLSearchParams(params).toString();
+        const r = await fetch(url + '?' + qs, {headers:{'Accept':'application/json'}});
+        const j = await r.json();
+        if(j.choices){
+          Object.keys(j.choices).forEach(k=>{
+            const sel = form.querySelector('[data-type-loader="'+k.replace(/s$/,'')+'"]');
+            if(!sel) return;
+            const current = sel.value;
+            const keepOther = sel.querySelector('option[value="other"]');
+            sel.innerHTML = '<option value=\"\">Make your choice</option>';
+            (j.choices[k]||[]).forEach(item=>{
+              // Handle both flat array and grouped object
+              if(Array.isArray(j.choices[k])){
+                const o=document.createElement('option'); o.value=item.id; o.textContent=item.name;
+                if(item.fuel_type_id) o.dataset.fuelTypeId=item.fuel_type_id;
+                sel.appendChild(o);
+              }
+            });
+            if(keepOther) sel.appendChild(keepOther);
+            if(j.selected && j.selected[k.replace(/s$/,'')]){
+              sel.value = j.selected[k.replace(/s$/,'')];
+            } else if(current && sel.querySelector('option[value="'+current+'"]')){
+              sel.value=current;
+            }
+          });
+          // Handle power increase link
+          const ecuSel = form.querySelector('[data-type-loader="ecu"]');
+          if(ecuSel) ecuSel.dispatchEvent(new Event('change'));
+        }
+      }catch(e){ console.error('type-loader fallback', e); }
+    }
+    // Initial load
+    loadChoices({language: document.documentElement.lang || 'en'});
+    selects.forEach(s=>{
+      s.addEventListener('change', ()=>{
+        const params={language: document.documentElement.lang || 'en'};
+        selects.forEach(sel=>{
+          const key=sel.dataset.typeLoader;
+          params[key]=sel.value||'';
+        });
+        loadChoices(params);
+      });
+    });
+    window._cmsTypeLoaderInitialized=true;
+  }
+})();
+</script>
 </body>
 </html>

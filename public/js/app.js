@@ -307,87 +307,199 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Form submit
+    // Form submit — handles both old REVBOOST form (vehicle_make_id) and exact export form (vehicle[make_id])
     const form=document.getElementById('file-service');
     if(form){
+      // Determine which form style we have
+      const isExact = !!form.querySelector('[name="vehicle[make_id]"]');
       form.addEventListener('submit', async (e)=>{
         e.preventDefault();
         const btn=document.getElementById('submitBtn'); const err=document.getElementById('submitError');
         err.style.display='none';
         btn.disabled=true; btn.textContent='Submitting...';
         try{
-          const fd=new FormData(form);
-          // Collect extra data for API
-          const makeName = makeSel.options[makeSel.selectedIndex]?.dataset?.name || makeSel.options[makeSel.selectedIndex]?.text || '';
-          const modelName = modelSel.options[modelSel.selectedIndex]?.dataset?.name || modelSel.options[modelSel.selectedIndex]?.text || '';
-          const genName = genSel.options[genSel.selectedIndex]?.dataset?.name || genSel.options[genSel.selectedIndex]?.text || '';
-          const engineName = engineSel.options[engineSel.selectedIndex]?.dataset?.name || engineSel.options[engineSel.selectedIndex]?.text || '';
-          const ecuName = ecuSel.options[ecuSel.selectedIndex]?.dataset?.name || ecuSel.options[ecuSel.selectedIndex]?.text || '';
-          const gearboxSel=form.querySelector('select[name="gearbox_id"]');
-          const gearboxName=gearboxSel.options[gearboxSel.selectedIndex]?.dataset?.name || gearboxSel.options[gearboxSel.selectedIndex]?.text || '';
-          // Tuning options
-          const checkedOpts=Array.from(document.querySelectorAll('.opt-check:checked')).map(cb=>cb.value);
-          const optionDetails={};
-          document.querySelectorAll('.opt-check:checked').forEach(cb=>{
-            const id=cb.value;
-            const rpm=document.querySelector(`[data-rpm="${id}"]`);
-            const loud=document.querySelector(`[data-loud="${id}"]`);
-            const dtc=document.querySelector(`[data-dtc-input="${id}"]`);
-            optionDetails[id]={ rpm: rpm?rpm.value:'', loudness: loud?loud.value:'', dtc: dtc?dtc.value:'' };
-          });
-          // Build final FormData for API
-          const apiFd=new FormData();
-          apiFd.append('make_id', makeSel.value);
-          apiFd.append('make', form.querySelector('input[name="make"]').value);
-          apiFd.append('makeName', makeName);
-          apiFd.append('model_id', modelSel.value);
-          apiFd.append('modelName', modelName);
-          apiFd.append('generation_id', genSel.value);
-          apiFd.append('generationName', genName);
-          apiFd.append('engine_id', engineSel.value);
-          apiFd.append('engineName', engineName);
-          apiFd.append('ecu_id', ecuSel.value);
-          apiFd.append('ecuName', ecuName);
-          apiFd.append('power_hp', form.querySelector('input[name="power_hp"]').value);
-          apiFd.append('power_kw', form.querySelector('input[name="power_kw"]').value);
-          apiFd.append('year', form.querySelector('select[name="year"]').value);
-          apiFd.append('gearbox_id', gearboxSel.value);
-          apiFd.append('gearbox', gearboxName);
-          apiFd.append('license_plate', form.querySelector('input[name="license_plate"]').value);
-          apiFd.append('vin', form.querySelector('input[name="vin"]').value);
-          apiFd.append('octane_rating', form.querySelector('select[name="octane_rating"]').value);
-          apiFd.append('tool_type', form.querySelector('select[name="tool_type"]').value);
-          apiFd.append('read_method_id', form.querySelector('select[name="read_method_id"]').value);
-          apiFd.append('read_method_other', form.querySelector('input[name="read_method_other"]').value);
-          apiFd.append('hardware_number', form.querySelector('input[name="hardware_number"]').value);
-          apiFd.append('software_number', form.querySelector('input[name="software_number"]').value);
-          apiFd.append('tuning_type_id', form.querySelector('input[name="tuning_type_id"]:checked')?.value || '');
-          apiFd.append('options', JSON.stringify(checkedOpts));
-          apiFd.append('optionDetails', JSON.stringify(optionDetails));
-          apiFd.append('has_modified_parts', form.querySelector('select[name="has_modified_parts"]').value);
-          apiFd.append('modified_parts_remarks', form.querySelector('textarea[name="modified_parts_remarks"]').value);
-          apiFd.append('modified_details', form.querySelector('textarea[name="modified_remarks"]')?.value || '');
-          apiFd.append('time_frame', form.querySelector('select[name="time_frame"]').value);
-          apiFd.append('info', form.querySelector('textarea[name="info"]').value);
-          apiFd.append('terms_and_conditions', form.querySelector('input[name="terms_and_conditions"]').checked ? '1' : '0');
-          apiFd.append('refund_policy', form.querySelector('input[name="refund_policy"]').checked ? '1' : '0');
-          const origFile=document.getElementById('originalFile').files[0];
-          if(origFile) apiFd.append('originalFile', origFile);
-          const tcuFile=document.getElementById('tcuFile').files[0];
-          if(tcuFile) apiFd.append('tcuFile', tcuFile);
-          const atts=document.getElementById('attachments').files;
-          for(let i=0;i<atts.length;i++) apiFd.append('attachments', atts[i]);
+          if(isExact){
+            // Exact export form: just send FormData as-is (with file uploads) to our flexible backend
+            const fd = new FormData(form);
+            // Add token header for auth
+            const token = localStorage.getItem('token');
+            const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+            // Ensure file inputs are correctly named for backend (file[original_asset_id] already correct)
+            // But also handle case where Vue uploader didn't set file — we have fallback inputs with same names
+            const res=await fetch('/api/file-services', {method:'POST', body: fd, headers, credentials:'include'});
+            const data=await res.json();
+            if(!res.ok) throw new Error(data.error || 'Er ging iets mis');
+            alert('File service succesvol ingediend! Credits gebruikt: '+data.credits.toFixed(2));
+            window.location='/account/file-services';
+          } else {
+            const fd=new FormData(form);
+            // Collect extra data for API
+            const makeName = makeSel.options[makeSel.selectedIndex]?.dataset?.name || makeSel.options[makeSel.selectedIndex]?.text || '';
+            const modelName = modelSel.options[modelSel.selectedIndex]?.dataset?.name || modelSel.options[modelSel.selectedIndex]?.text || '';
+            const genName = genSel.options[genSel.selectedIndex]?.dataset?.name || genSel.options[genSel.selectedIndex]?.text || '';
+            const engineName = engineSel.options[engineSel.selectedIndex]?.dataset?.name || engineSel.options[engineSel.selectedIndex]?.text || '';
+            const ecuName = ecuSel.options[ecuSel.selectedIndex]?.dataset?.name || ecuSel.options[ecuSel.selectedIndex]?.text || '';
+            const gearboxSel=form.querySelector('select[name="gearbox_id"]');
+            const gearboxName=gearboxSel.options[gearboxSel.selectedIndex]?.dataset?.name || gearboxSel.options[gearboxSel.selectedIndex]?.text || '';
+            // Tuning options
+            const checkedOpts=Array.from(document.querySelectorAll('.opt-check:checked')).map(cb=>cb.value);
+            const optionDetails={};
+            document.querySelectorAll('.opt-check:checked').forEach(cb=>{
+              const id=cb.value;
+              const rpm=document.querySelector(`[data-rpm="${id}"]`);
+              const loud=document.querySelector(`[data-loud="${id}"]`);
+              const dtc=document.querySelector(`[data-dtc-input="${id}"]`);
+              optionDetails[id]={ rpm: rpm?rpm.value:'', loudness: loud?loud.value:'', dtc: dtc?dtc.value:'' };
+            });
+            // Build final FormData for API
+            const apiFd=new FormData();
+            apiFd.append('make_id', makeSel.value);
+            apiFd.append('make', form.querySelector('input[name="make"]').value);
+            apiFd.append('makeName', makeName);
+            apiFd.append('model_id', modelSel.value);
+            apiFd.append('modelName', modelName);
+            apiFd.append('generation_id', genSel.value);
+            apiFd.append('generationName', genName);
+            apiFd.append('engine_id', engineSel.value);
+            apiFd.append('engineName', engineName);
+            apiFd.append('ecu_id', ecuSel.value);
+            apiFd.append('ecuName', ecuName);
+            apiFd.append('power_hp', form.querySelector('input[name="power_hp"]').value);
+            apiFd.append('power_kw', form.querySelector('input[name="power_kw"]').value);
+            apiFd.append('year', form.querySelector('select[name="year"]').value);
+            apiFd.append('gearbox_id', gearboxSel.value);
+            apiFd.append('gearbox', gearboxName);
+            apiFd.append('license_plate', form.querySelector('input[name="license_plate"]').value);
+            apiFd.append('vin', form.querySelector('input[name="vin"]').value);
+            apiFd.append('octane_rating', form.querySelector('select[name="octane_rating"]').value);
+            apiFd.append('tool_type', form.querySelector('select[name="tool_type"]').value);
+            apiFd.append('read_method_id', form.querySelector('select[name="read_method_id"]').value);
+            apiFd.append('read_method_other', form.querySelector('input[name="read_method_other"]').value);
+            apiFd.append('hardware_number', form.querySelector('input[name="hardware_number"]').value);
+            apiFd.append('software_number', form.querySelector('input[name="software_number"]').value);
+            apiFd.append('tuning_type_id', form.querySelector('input[name="tuning_type_id"]:checked')?.value || form.querySelector('input[name="type[tuning_type_id]"]:checked')?.value || '');
+            apiFd.append('options', JSON.stringify(checkedOpts));
+            apiFd.append('optionDetails', JSON.stringify(optionDetails));
+            apiFd.append('has_modified_parts', form.querySelector('select[name="has_modified_parts"]')?.value || form.querySelector('select[name="modified_parts_form[has_modified_parts]"]')?.value || '');
+            apiFd.append('modified_parts_remarks', form.querySelector('textarea[name="modified_parts_remarks"]')?.value || form.querySelector('textarea[name="modified_parts_form[modified_parts_remarks]"]')?.value || '');
+            apiFd.append('modified_details', form.querySelector('textarea[name="modified_remarks"]')?.value || '');
+            apiFd.append('time_frame', form.querySelector('select[name="time_frame"]')?.value || form.querySelector('select[name="extra[time_frame]"]')?.value || '');
+            apiFd.append('info', form.querySelector('textarea[name="info"]')?.value || form.querySelector('textarea[name="extra[info]"]')?.value || '');
+            apiFd.append('terms_and_conditions', form.querySelector('input[name="terms_and_conditions"]')?.checked ? '1' : '0' || form.querySelector('input[name="extra[terms_and_conditions]"]')?.checked ? '1' : '0');
+            apiFd.append('refund_policy', form.querySelector('input[name="refund_policy"]')?.checked ? '1' : '0' || form.querySelector('input[name="extra[refund_policy]"]')?.checked ? '1' : '0');
+            const origFile=document.getElementById('originalFile')?.files[0];
+            if(origFile) apiFd.append('originalFile', origFile);
+            const tcuFile=document.getElementById('tcuFile')?.files[0];
+            if(tcuFile) apiFd.append('tcuFile', tcuFile);
+            const atts=document.getElementById('attachments')?.files;
+            if(atts) for(let i=0;i<atts.length;i++) apiFd.append('attachments', atts[i]);
 
-          const token = localStorage.getItem('token');
-          const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
-          const res=await fetch('/api/file-services', {method:'POST', body:apiFd, headers, credentials:'include'});
-          const data=await res.json();
-          if(!res.ok) throw new Error(data.error || 'Er ging iets mis');
-          alert('File service succesvol ingediend! Credits gebruikt: '+data.credits.toFixed(2));
-          window.location='/account/file-services';
+            const token = localStorage.getItem('token');
+            const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+            const res=await fetch('/api/file-services', {method:'POST', body:apiFd, headers, credentials:'include'});
+            const data=await res.json();
+            if(!res.ok) throw new Error(data.error || 'Er ging iets mis');
+            alert('File service succesvol ingediend! Credits gebruikt: '+data.credits.toFixed(2));
+            window.location='/account/file-services';
+          }
         }catch(ex){
           err.textContent=ex.message; err.style.display='block';
         }finally{ btn.disabled=false; btn.textContent='Submit file service'; }
+      });
+    }
+  }
+  // Exact form additional handlers: power increase, HP/KW sync, data-usable, file drop for new IDs
+  const exactForm=document.getElementById('file-service');
+  if(exactForm && exactForm.querySelector('[name="vehicle[make_id]"]')){
+    // HP <-> KW sync for exact form
+    const hpExact=document.querySelector('[name="vehicle[power_hp]"]');
+    const kwExact=document.querySelector('[name="vehicle[power_kw]"]');
+    if(hpExact && kwExact){
+      let lock=false;
+      hpExact.addEventListener('input',()=>{ if(lock) return; lock=true; if(hpExact.value) kwExact.value=Math.round(hpExact.value/1.35962); lock=false; });
+      kwExact.addEventListener('input',()=>{ if(lock) return; lock=true; if(kwExact.value) hpExact.value=Math.round(kwExact.value*1.35962); lock=false; });
+    }
+    // View power increase for exact form
+    const engineExact=document.querySelector('[name="vehicle[engine_id]"]');
+    const viewPowerExact=document.getElementById('view_power_increase');
+    if(engineExact && viewPowerExact){
+      engineExact.addEventListener('change', async ()=>{
+        if(!engineExact.value || engineExact.value==='other'){ viewPowerExact.style.display='none'; return; }
+        try{
+          const pr=await fetch('/api/power/'+engineExact.value); const p=await pr.json();
+          if(hpExact) hpExact.value=p.original.hp;
+          if(kwExact) kwExact.value=p.original.kw;
+          viewPowerExact.style.display='inline';
+          viewPowerExact.onclick=(e)=>{ e.preventDefault(); alert(`Power increase voor ${engineExact.options[engineExact.selectedIndex].text}:\nOrigineel: ${p.original.hp} hp / ${p.original.kw} kW / ${p.original.nm} Nm\nTuned: ${p.tuned.hp} hp / ${p.tuned.kw} kW / ${p.tuned.nm} Nm\nWinst: +${p.gainHp} hp / +${p.gainNm} Nm`); };
+        }catch{}
+      });
+    }
+    // File drop for exact form (file[original_asset_id] etc.)
+    function setupExactDrop(dropId, inputName){
+      const drop=document.getElementById(dropId);
+      const input=document.querySelector('[name="'+inputName+'"]') || document.getElementById(dropId.replace('drop','').toLowerCase()+'File');
+      const nameEl=document.getElementById(dropId==='dropOriginal'?'originalFileName':'tcuFileName');
+      if(!drop || !input) return;
+      drop.addEventListener('click',()=>input.click());
+      drop.addEventListener('dragover',e=>{ e.preventDefault(); drop.style.borderColor='var(--primary)'; });
+      drop.addEventListener('dragleave',()=>drop.style.borderColor='var(--border)');
+      drop.addEventListener('drop',e=>{ e.preventDefault(); drop.style.borderColor='var(--border)'; if(e.dataTransfer.files.length){ input.files=e.dataTransfer.files; if(nameEl) nameEl.textContent=input.files[0].name+' ('+(input.files[0].size/1024/1024).toFixed(2)+' MB)'; }});
+      input.addEventListener('change',()=>{ if(input.files[0] && nameEl) nameEl.textContent=input.files[0].name+' ('+(input.files[0].size/1024/1024).toFixed(2)+' MB)'; });
+    }
+    setupExactDrop('dropOriginal','file[original_asset_id]');
+    setupExactDrop('dropTcu','file[tcu_asset_id]');
+    // Attachments for exact form
+    const dropAttExact=document.getElementById('dropAttachments');
+    const attInputExact=document.querySelector('[name="file[attachments][]"]') || document.getElementById('attachments');
+    const attListExact=document.getElementById('attachmentsList');
+    if(dropAttExact && attInputExact){
+      dropAttExact.addEventListener('click',()=>attInputExact.click());
+      dropAttExact.addEventListener('dragover',e=>{e.preventDefault(); dropAttExact.style.borderColor='var(--primary)';});
+      dropAttExact.addEventListener('dragleave',()=>dropAttExact.style.borderColor='var(--border)');
+      dropAttExact.addEventListener('drop',e=>{e.preventDefault(); attInputExact.files=e.dataTransfer.files; renderAttExact();});
+      attInputExact.addEventListener('change',renderAttExact);
+      function renderAttExact(){
+        if(!attInputExact.files.length){ attListExact.style.display='none'; attListExact.innerHTML=''; return; }
+        attListExact.style.display='block';
+        attListExact.innerHTML=Array.from(attInputExact.files).map(f=>`<div style="padding:6px 8px;border:1px solid var(--border);background:#fff;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:12px"><span><i class="fa fa-paperclip"></i> ${f.name} (${(f.size/1024).toFixed(1)} KB)</span><span style="color:#78909c">${f.type||'file'}</span></div>`).join('');
+      }
+    }
+    // Tuning type options for exact form (same as old but with type[tuning_type_id] selector)
+    const tuningRadiosExact=document.querySelectorAll('input[name="type[tuning_type_id]"]');
+    const optionsContainerExact=document.getElementById('tuningOptionsContainer');
+    const optionsGridExact=document.getElementById('tuningOptionsGrid');
+    if(tuningRadiosExact.length){
+      tuningRadiosExact.forEach(r=>{
+        r.addEventListener('change',()=>{
+          const typeId=r.value;
+          const opts=tuningData.optionsByType[typeId] || [];
+          if(opts.length===0){ optionsContainerExact.style.display='none'; optionsGridExact.innerHTML=''; return; }
+          optionsContainerExact.style.display='block';
+          optionsGridExact.innerHTML = opts.map(o=>`
+            <label class="FancyCheckbox" style="border:1px solid var(--border);padding:10px;background:#fff;position:relative">
+              <input type="checkbox" name="type[option_group_${o.id}][tuning_options_list][${o.id}][enabled]" value="1" data-credits="${o.credits}" data-name="${o.name}" class="opt-check">
+              <span></span>
+              <span>${o.name} (+${o.credits.toFixed(2)} credit${o.credits!==1?'s':''})</span>
+              ${o.hasRPM ? `<input type="text" placeholder="Specify desired RPM value (3500 RPM and up recommended)" class="form-control" style="margin-top:6px;display:none" data-rpm="${o.id}" name="type[option_group_${o.id}][tuning_options_list][${o.id}][rpm]">` : ''}
+              ${o.hasLoudness ? `<select class="form-control" style="margin-top:6px;display:none" data-loud="${o.id}" name="type[option_group_${o.id}][tuning_options_list][${o.id}][loudness]"><option value="">Specify desired configuration</option><option value="loud">Loud (-30 degrees)</option><option value="normal">Normal (-15 degrees)</option></select>` : ''}
+              ${o.hasDTC ? `<div style="display:none;margin-top:6px" data-dtc="${o.id}"><input type="text" placeholder="Specify desired DTC's to be turned off" class="form-control dtc-input" data-dtc-input="${o.id}" name="type[option_group_${o.id}][tuning_options_list][${o.id}][diagnostic_trouble_codes]"><div style="font-size:10px;color:#78909c;margin-top:4px">The meaning of a DTC can differ per brand so look carefully at the description</div></div>` : ''}
+            </label>
+          `).join('');
+          optionsGridExact.querySelectorAll('.opt-check').forEach(cb=>{
+            cb.addEventListener('change',()=>{
+              const id=cb.dataset.credits ? cb.value : cb.getAttribute('value');
+              // Actually id is in name, extract
+              const match = cb.getAttribute('name').match(/\[(\d+)\]\[enabled\]/);
+              const optId = match ? match[1] : cb.value;
+              const rpm=document.querySelector(`[data-rpm="${optId}"]`);
+              const loud=document.querySelector(`[data-loud="${optId}"]`);
+              const dtc=document.querySelector(`[data-dtc="${optId}"]`);
+              if(rpm) rpm.style.display = cb.checked ? 'block' : 'none';
+              if(loud) loud.style.display = cb.checked ? 'block' : 'none';
+              if(dtc) dtc.style.display = cb.checked ? 'block' : 'none';
+            });
+          });
+        });
       });
     }
   }
