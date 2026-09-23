@@ -1,0 +1,208 @@
+<%- include('partials/header') %>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="credit-banner">
+        <div>
+          <h3>Buy 1 credit &nbsp; Get 1 free *!</h3>
+          <p>* Max. 10 bonus credits per order • Valid only for new customers</p>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;opacity:.9">FAST TURNAROUND</div>
+          <div style="font-weight:800">Ready within 5 min</div>
+        </div>
+      </div>
+      <h1>High quality <span class="accent">ECU tuning files</span> delivered fast by experienced engineers.</h1>
+      <p>Ready to flash. Tested on real vehicles. Dyno-proven gains. 24/7 support voor professionals.</p>
+      <div class="hero-cta">
+        <a href="/register" class="btn btn-primary">Register Now</a>
+        <a href="/login" class="btn btn-ghost">NEW Login</a>
+        <a href="/account/file-services/new-file-service" class="btn" style="background:#263238;color:#fff">OLD Login</a>
+      </div>
+      <div class="hero-badges">
+        <div class="badge"><i class="fa fa-clock-o"></i><div><strong>FAST TURNAROUND</strong><span>Ready within 5 minutes</span></div></div>
+        <div class="badge"><i class="fa fa-tachometer"></i><div><strong>DYNO-TESTED</strong><span>Tested on real vehicles</span></div></div>
+        <div class="badge"><i class="fa fa-headphones"></i><div><strong>24/7 SUPPORT</strong><span>We're here to help</span></div></div>
+      </div>
+    </div>
+
+    <!-- CONFIGURATOR -->
+    <div class="configurator" id="configurator">
+      <h3><i class="fa fa-car" style="color:var(--primary)"></i> Enhnance your vehicle's performance</h3>
+      <p style="font-size:12px;color:#78909c;margin-bottom:12px">Kies je voertuig en bekijk direct hoeveel PK & Nm je wint — op basis van echte ECU data.</p>
+      <div class="config-grid">
+        <select id="hp-make"><option value="">Choose a make</option><% makes.forEach(m=>{ %><option value="<%= m.id %>"><%= m.name %></option><% }) %><option value="other">Otherwise, namely</option></select>
+        <select id="hp-model" disabled><option value="">Choose a model</option></select>
+        <select id="hp-generation" disabled><option value="">Choose a generation</option></select>
+        <select id="hp-engine" disabled><option value="">Choose an engine</option></select>
+        <button class="btn-search" id="hp-search"><i class="fa fa-search"></i> Search</button>
+      </div>
+      <div id="hp-result" class="power-card">
+        <h4><i class="fa fa-line-chart"></i> <span id="hp-engine-name">2.0 TDI 150hp</span> <span style="margin-left:auto;font-size:11px;background:var(--primary);color:#fff;padding:2px 6px">Stage 1</span></h4>
+        <div class="power-grid">
+          <div class="power-item">
+            <div class="label">Origineel</div>
+            <div class="value" id="orig-hp">150 hp</div>
+            <div style="font-size:11px;color:#78909c"><span id="orig-kw">110 kW</span> • <span id="orig-nm">340 Nm</span></div>
+          </div>
+          <div class="power-item" style="border-color:var(--primary);background:#fff7f3">
+            <div class="label">Na tuning</div>
+            <div class="value" id="tuned-hp" style="color:var(--primary)">185 hp</div>
+            <div style="font-size:11px;color:#78909c"><span id="tuned-kw">136 kW</span> • <span id="tuned-nm">400 Nm</span></div>
+          </div>
+          <div class="power-item" style="background:#e8f5e9;border-color:#c8e6c9">
+            <div class="label">Winst</div>
+            <div class="value" id="gain-hp" style="color:#2e7d32">+35 hp</div>
+            <div><span class="gain" id="gain-nm">+60 Nm</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <a href="/register" class="btn btn-primary" style="flex:1">Bestel tuning file • 1 credit</a>
+          <a href="/tuning-specs" style="padding:10px 14px;border:1px solid var(--border);background:#fff;font-size:12px;font-weight:600;color:var(--text)">Bekijk ECU: <span id="ecu-name">Bosch EDC17C64</span></a>
+        </div>
+        <p style="font-size:11px;color:#78909c;margin-top:8px;text-align:center"><i class="fa fa-shield"></i> Safe & reliable • Tested on dyno • V-Max optional</p>
+      </div>
+      <p id="hp-error" style="display:none;margin-top:12px;padding:10px;background:#ffebee;color:#c62828;border:1px solid #ffcdd2;font-size:12px">Tuning file is not available. We're working on this in our R&D department.</p>
+    </div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stats-inner">
+    <div><div class="stat-number">14</div><div class="stat-label">Years of experience</div></div>
+    <div><div class="stat-number">15k+</div><div class="stat-label">File transfers a month</div></div>
+    <div><div class="stat-number">80k+</div><div class="stat-label">Files in our database</div></div>
+    <div><div class="stat-number">22</div><div class="stat-label">Engineers</div></div>
+  </div>
+</div>
+
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <h2>Welcome to <span style="color:var(--primary)">Fast Chiptuningfiles</span></h2>
+    <p class="lead">Your ultimate destination for high-quality chiptuning files. Discover how we can enhance your vehicle's performance and provide the perfect chiptuning solution for every need.</p>
+    <div class="features">
+      <div class="feature"><img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/05/1-1-w.png" alt="" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3774/3774083.png'"><h4>Stage 1</h4><p>More power & torque safe & reliable</p></div>
+      <div class="feature"><img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/05/2-W.png" alt="" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3774/3774083.png'"><h4>Stage 2</h4><p>Higher performance for modified vehicles</p></div>
+      <div class="feature"><img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/05/3-W.png" alt="" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3774/3774083.png'"><h4>Stage 3</h4><p>Maximum power built for performance</p></div>
+      <div class="feature"><img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/05/6W.png" alt="" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3774/3774083.png'"><h4>Pop & Bang</h4><p>Louder exhaust pops sporty sound</p></div>
+      <div class="feature"><img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/05/4-1-W.png" alt="" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3774/3774083.png'"><h4>DPF off</h4><p>Remove DPF limits improve efficiency</p></div>
+      <div class="feature"><img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/05/5-W.png" alt="" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3774/3774083.png'"><h4>EGR off</h4><p>Disable EGR system cleaner & more power</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="prijzen" style="background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="section-inner">
+    <h2>Chiptuning prices</h2>
+    <div class="pricing-tabs">
+      <button class="active" data-tab="master">Master</button>
+      <button data-tab="slave">Slave</button>
+      <button data-tab="evc">EVC</button>
+    </div>
+    <div id="pricing-master" class="pricing-grid">
+      <div class="price-card"><h4>Try-out</h4><div style="font-size:11px;color:#78909c">1 Credit • €85 per credit</div><div class="price">€85,- <small>Price per credit €85,-</small></div><ul><li>Master tuning file</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card"><h4>Starter</h4><div style="font-size:11px;color:#78909c">2 Credits • €85 per credit</div><div class="price">€170,- <small>Price per credit €85,-</small></div><ul><li>Master tuning file</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card popular"><h4>Workshop — Most popular</h4><div style="font-size:11px;color:#78909c">10 Credits • €75 per credit</div><div class="price">€750,- <small><s>€850,-</s> Save €100,-</small></div><ul><li>Master tuning file</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card"><h4>Tuner</h4><div style="font-size:11px;color:#78909c">5 Credits • €80 per credit</div><div class="price">€400,- <small><s>€425,-</s> Save €25,-</small></div><ul><li>Master tuning file</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card"><h4>Pro Workshop</h4><div style="font-size:11px;color:#78909c">25 Credits • €70 per credit</div><div class="price">€1.750,- <small><s>€2.125,-</s> Save €375,-</small></div><ul><li>Master tuning file</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card"><h4>Dealer</h4><div style="font-size:11px;color:#78909c">50 Credits • €65 per credit</div><div class="price">€3.250,- <small><s>€4.250,-</s> Save €1.000,-</small></div><ul><li>Master tuning file</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+    </div>
+    <div id="pricing-slave" class="pricing-grid" style="display:none">
+      <div class="price-card"><h4>Try-out Slave</h4><div class="price">€75,- <small>1 Credit • Save €10</small></div><ul><li>Slave tuning file (encrypted)</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card"><h4>Tuner Slave</h4><div class="price">€350,- <small>5 Credits • €70 per credit</small></div><ul><li>Slave tuning file</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card popular"><h4>Workshop Slave</h4><div class="price">€650,- <small>10 Credits • €65 per credit</small></div><ul><li>Slave tuning file</li><li>Standard delivery</li><li>Email support</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+    </div>
+    <div id="pricing-evc" class="pricing-grid" style="display:none">
+      <div class="price-card"><h4>EVC 10 Credits</h4><div class="price">€70,- <small>€7 per credit</small></div><ul><li>EVC credits</li><li>Instant delivery</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card popular"><h4>EVC 100 Credits</h4><div class="price">€600,- <small><s>€700,-</s> Save €100</small></div><ul><li>EVC credits</li><li>Instant delivery</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+      <div class="price-card"><h4>EVC 500 Credits</h4><div class="price">€2.500,- <small><s>€3.500,-</s> Save €1.000</small></div><ul><li>EVC credits</li><li>Instant delivery</li></ul><a href="/account/buy-credits" class="btn btn-primary" style="width:100%">Buy now</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <h2>Maximum Performance. Maximum Control.</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;margin-top:24px">
+      <div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="border:1px solid var(--border);padding:14px;background:#fff"><strong style="color:var(--primary)">Stage 1</strong><div style="font-size:12px;color:#78909c">More Power & torque safe & reliable</div></div>
+          <div style="border:1px solid var(--border);padding:14px;background:#fff"><strong style="color:var(--primary)">Stage 2</strong><div style="font-size:12px;color:#78909c">Higher Performance for modified vehicles</div></div>
+          <div style="border:1px solid var(--border);padding:14px;background:#fff"><strong style="color:var(--primary)">Stage 3</strong><div style="font-size:12px;color:#78909c">Maximum Power Built for performance</div></div>
+          <div style="border:1px solid var(--border);padding:14px;background:#fff"><strong style="color:var(--primary)">Pop & Bang</strong><div style="font-size:12px;color:#78909c">Louder exhaust pops sporty sound</div></div>
+        </div>
+        <div style="margin-top:16px;padding:14px;background:#fff3ef;border:1px solid #ffccb3;font-size:12px"><i class="fa fa-info-circle"></i> Alle files zijn 100% custom — gemaakt door engineers en getest op dyno. Geen generic files.</div>
+      </div>
+      <div style="position:relative">
+        <img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/07/Fast-Chiptuningfiles_Middlebanner_Audi_back.jpg" alt="Audi" style="width:100%;height:260px;object-fit:cover;border:1px solid var(--border)" onerror="this.src='https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800'">
+        <div style="position:absolute;bottom:12px;left:12px;background:var(--primary);color:#fff;padding:8px 12px;font-weight:700;font-size:12px">14 YEARS EXPERIENCE • 5 MIN DELIVERY</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg);border-top:1px solid var(--border)">
+  <div class="section-inner" style="text-align:center">
+    <h2>Simple and straightforward</h2>
+    <p class="lead">Joining Fast Chiptuningfiles is simple. Our intuitive platform ensures you can quickly access files you need.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h4 style="margin-top:8px">Create an Account</h4><p style="font-size:12px;color:#78909c;margin:8px 0">Sign up on our website to become a member.</p><img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/05/arrows-1-150x150.png" style="width:30px;margin-top:10px" onerror="this.style.display='none'"></div>
+      <div class="step"><div class="step-num">2</div><h4 style="margin-top:8px">Buy Credits</h4><p style="font-size:12px;color:#78909c;margin:8px 0">Purchase credits through our secure online system.</p></div>
+      <div class="step"><div class="step-num">3</div><h4 style="margin-top:8px">Upload & Download</h4><p style="font-size:12px;color:#78909c;margin:8px 0">Upload your original ECU file, we optimize, you flash.</p><a href="/register" class="btn btn-primary" style="margin-top:10px">Get started now</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <h2>Why Fast Chiptuningfiles?</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;align-items:center">
+      <div>
+        <div style="display:flex;gap:12px;margin-bottom:16px"><i class="fa fa-check" style="color:var(--primary);margin-top:4px"></i><div><strong>14 Years of Experience</strong><div style="font-size:12px;color:#78909c">Our extensive experience ensures high-quality and reliable chiptuning solutions.</div></div></div>
+        <div style="display:flex;gap:12px;margin-bottom:16px"><i class="fa fa-check" style="color:var(--primary);margin-top:4px"></i><div><strong>Fast Turnaround Time</strong><div style="font-size:12px;color:#78909c">Enjoy quick service with a turnaround of just 5 minutes!</div></div></div>
+        <div style="display:flex;gap:12px;margin-bottom:16px"><i class="fa fa-check" style="color:var(--primary);margin-top:4px"></i><div><strong>Global Reach</strong><div style="font-size:12px;color:#78909c">We supply chiptuning files worldwide.</div></div></div>
+        <div style="display:flex;gap:12px"><i class="fa fa-check" style="color:var(--primary);margin-top:4px"></i><div><strong>Comprehensive Database</strong><div style="font-size:12px;color:#78909c">Access a vast selection for various makes and models.</div></div></div>
+        <a href="/tuning-specs" class="btn btn-primary" style="margin-top:18px">Check the possibilities for your car</a>
+      </div>
+      <img src="https://fast-chiptuningfiles.com/wp-content/uploads/2026/07/Fast-Chiptuningfiles_Car-on-dyno-testing-768x615.png" alt="Dyno" style="width:100%;border:1px solid var(--border)" onerror="this.src='https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600'">
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg);border-top:1px solid var(--border)" id="over">
+  <div class="section-inner">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq" style="margin-top:20px">
+      <div class="faq-item open"><div class="faq-q">What is Chiptuning? <i class="fa fa-angle-down"></i></div><div class="faq-a">Chiptuning involves modifying the software on your vehicle’s ECU to enhance performance, increase power, and improve fuel efficiency.</div></div>
+      <div class="faq-item"><div class="faq-q">Will Chiptuning Void My Vehicle's Warranty? <i class="fa fa-angle-down"></i></div><div class="faq-a">Chiptuning can affect your vehicle’s factory warranty. Discuss with your manufacturer before modifying.</div></div>
+      <div class="faq-item"><div class="faq-q">Can I Revert to the Original Software? <i class="fa fa-angle-down"></i></div><div class="faq-a">Yes, in most cases you can revert to original software.</div></div>
+      <div class="faq-item"><div class="faq-q">How Does Chiptuning Affect Fuel Consumption? <i class="fa fa-angle-down"></i></div><div class="faq-a">Optimized engine performance can lead to more economical driving.</div></div>
+      <div class="faq-item"><div class="faq-q">What Types of Files Do You Offer? <i class="fa fa-angle-down"></i></div><div class="faq-a">Master files (viewable), Slave files (encrypted for slave tools), and EVC WinOLS files.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:#fff" id="contact">
+  <div class="section-inner">
+    <h2>Get in touch</h2>
+    <p class="lead">Have any questions or need assistance? We're here to help!</p>
+    <div class="contact-grid">
+      <div style="border:1px solid var(--border);padding:20px;background:#fafafa">
+        <h4><i class="fa fa-envelope" style="color:var(--primary)"></i> Mail</h4><p>info@fast-chiptuningfiles.com</p>
+        <h4 style="margin-top:16px"><i class="fa fa-phone" style="color:var(--primary)"></i> Phone</h4><p>+31 78 783 00 13</p>
+        <div style="margin-top:16px;padding:12px;background:#fff;border:1px solid var(--border)"><strong>Opening hours:</strong><br><span style="font-size:12px;color:#78909c">Ma-Vr 09:00 - 18:00 • Za 10:00 - 15:00 • 5 min delivery 24/7 online</span></div>
+      </div>
+      <form class="contact-form" style="border:1px solid var(--border);padding:20px;background:#fff" onsubmit="event.preventDefault();alert('Bedankt! We nemen contact op.');">
+        <input placeholder="Naam" required>
+        <input placeholder="E-mail" type="email" required>
+        <input placeholder="Telefoon">
+        <textarea placeholder="Bericht"></textarea>
+        <label style="font-size:11px;display:flex;gap:6px;margin-bottom:12px"><input type="checkbox" required style="width:auto"> I agree that my submitted data is collected and stored.</label>
+        <button class="btn btn-primary" style="width:100%">Verstuur</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

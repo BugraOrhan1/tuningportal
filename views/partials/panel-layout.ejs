@@ -1,0 +1,69 @@
+<% /* Panel layout header */ %>
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= typeof title !== 'undefined' ? title : 'File Panel | Fast-Chiptuningfiles' %></title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="page-wrapper">
+  <div class="Sidebar">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+      <img src="https://fast-chiptuningfiles.com/wp-content/uploads/2024/03/2.png" style="height:28px" onerror="this.style.display='none'">
+      <strong style="font-size:13px">FAST<span style="color:var(--primary)">FILES</span></strong>
+    </div>
+    <nav class="SidebarNavigation">
+      <div class="Heading--h5">Main menu</div>
+      <ul>
+        <li><a href="/account" class="item <%= currentPath==='/account' ? 'active' : '' %>">Home</a></li>
+        <li><a href="/account/file-services/new-file-service" class="item <%= currentPath.includes('new-file-service') ? 'active' : '' %>">New file service</a></li>
+        <li><a href="/account/file-services" class="item <%= currentPath==='/account/file-services' ? 'active' : '' %>">File services <span class="NoticeInline NoticeInline--red" id="badge-file-services" style="display:none">0</span></a></li>
+        <li><a href="/account/support-tickets" class="item <%= currentPath.includes('support') ? 'active' : '' %>">Support tickets</a></li>
+        <li><a href="/account/buy-credits" class="item <%= currentPath.includes('buy-credits') ? 'active' : '' %>">Buy credits</a></li>
+        <li><a href="/tuning-specs" class="item">IFrame Database</a></li>
+        <li><a href="#" class="item">Fast-Tuningshop</a></li>
+        <li><a href="/account/transactions" class="item <%= currentPath.includes('transactions') ? 'active' : '' %>">Transactions</a></li>
+        <li><a href="/account/orders" class="item <%= currentPath.includes('orders') ? 'active' : '' %>">Orders</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="Page">
+    <div class="Top">
+      <div class="Top__left">
+        <a href="/" class="back" style="font-size:12px;color:#78909c"><i class="fa fa-arrow-left"></i> Back to website</a>
+      </div>
+      <div class="Top__right">
+        <a href="/tuning-specs" class="TopItem" style="border-left:none;font-weight:600">View tuning specs</a>
+        <div class="TopItem">
+          <a href="/account/buy-credits" style="display:flex;align-items:center;gap:6px;color:var(--text)">
+            <i class="fa fa-database" style="color:var(--primary)"></i>
+            <span class="Top__credits__label">Tuning credits:</span>
+            <span class="Top__credits__amount"><%= user ? user.credits.toFixed(2) : '0.00' %> <i class="fa fa-angle-right" style="margin-left:4px"></i></span>
+          </a>
+        </div>
+        <a href="/account/support-tickets" class="TopItem" title="Contact support"><i class="fa fa-question-circle"></i></a>
+        <div class="TopItem" style="position:relative">
+          <div class="Top__account__user" onclick="document.getElementById('accountDropdown').style.display = document.getElementById('accountDropdown').style.display==='block' ? 'none':'block'">
+            <div class="Avatar"><%= user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() %></div>
+            <div>
+              <div style="font-weight:700;font-size:12px;line-height:1"><%= user.name %></div>
+              <div style="font-size:11px;color:#78909c"><%= user.email %></div>
+            </div>
+            <i class="fa fa-angle-down" style="margin-left:6px"></i>
+          </div>
+          <div id="accountDropdown" style="display:none;position:absolute;top:100%;right:0;background:#fff;border:1px solid var(--border);width:200px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:30">
+            <div style="padding:12px;border-bottom:1px solid var(--border)">
+              <div style="font-weight:700;font-size:13px"><%= user.name %></div>
+              <div style="font-size:11px;color:#78909c"><%= user.company || '' %></div>
+            </div>
+            <a href="/account/profile" style="display:block;padding:10px 12px;font-size:12px;color:var(--text)">Edit account</a>
+            <a href="/logout" style="display:block;padding:10px 12px;font-size:12px;color:var(--text);border-top:1px solid var(--border)">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <main>

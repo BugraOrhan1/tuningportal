@@ -1,0 +1,237 @@
+<%- include('partials/panel-layout', {title: 'New file service | Fast-Chiptuningfiles'}) %>
+<div class="Crumbs">
+  <div class="Crumbs__links"><p><span><a href="/account"><i class="fa fa-home"></i></a></span> <span class="sep">></span> <span><a href="/account/file-services">File services</a></span> <span class="sep">></span> <span>New file service</span></p></div>
+</div>
+<h1>New file service</h1>
+
+<div class="Notice Notice--error" id="creditWarning" style="display:none"><div>You do not have sufficient credits to submit a new file service. <a href="/account/buy-credits">Please buy more credits first.</a></div></div>
+
+<div class="EstimatedBanner button-color">
+  <div class="EstimatedBanner__title">The estimated delivery time is</div>
+  <div class="EstimatedBanner__duration">5 minutes - 10 minutes</div>
+</div>
+
+<form id="file-service" enctype="multipart/form-data">
+  <!-- Vehicle -->
+  <div class="Block">
+    <div class="Block__header">Vehicle</div>
+    <div class="Block__content">
+      <div class="Form flex">
+        <div class="fld fld_2 form-group">
+          <label class="control-label required">Make *</label>
+          <select class="form-control" id="vehicle_make_id" name="make_id" required>
+            <option value="">Make your choice</option>
+            <% makes.forEach(m=>{ %><option value="<%= m.id %>" data-name="<%= m.name %>"><%= m.name %></option><% }) %>
+            <option value="other">Otherwise, namely</option>
+          </select>
+        </div>
+        <div class="fld fld_2 form-group">
+          <label class="control-label required">Model *</label>
+          <select class="form-control" id="vehicle_model_id" name="model_id" required disabled>
+            <option value="">Make your choice</option>
+            <option value="other">Otherwise, namely</option>
+          </select>
+        </div>
+        <div class="fld fld_2 form-group">
+          <label class="control-label required">Generation *</label>
+          <select class="form-control" id="vehicle_generation_id" name="generation_id" required disabled>
+            <option value="">Make your choice</option>
+            <option value="other">Otherwise, namely</option>
+          </select>
+        </div>
+        <div class="fld fld_3 form-group">
+          <label class="control-label required">Engine *</label>
+          <select class="form-control" id="vehicle_engine_id" name="engine_id" required disabled>
+            <option value="">Make your choice</option>
+            <option value="other">Otherwise, namely</option>
+          </select>
+        </div>
+        <div class="fld fld_3 form-group">
+          <label class="control-label required">ECU *</label>
+          <select class="form-control" id="vehicle_ecu_id" name="ecu_id" required disabled>
+            <option value="">Make your choice</option>
+            <option value="other">Otherwise, namely</option>
+          </select>
+        </div>
+
+        <div class="fld fld_2 hide" id="wrap_make_other"><div class="form-group"><input class="form-control" name="make" placeholder="Specify make (if otherwise)"></div></div>
+        <div class="fld fld_2 hide" id="wrap_model_other"><div class="form-group"><input class="form-control" name="model" placeholder="Specify model"></div></div>
+        <div class="fld fld_2 hide" id="wrap_generation_other"><div class="form-group"><input class="form-control" name="generation" placeholder="Specify generation"></div></div>
+        <div class="fld fld_3 hide" id="wrap_engine_other"><div class="form-group"><input class="form-control" name="engine" placeholder="Specify engine"></div></div>
+        <div class="fld fld_3 hide" id="wrap_ecu_other"><div class="form-group"><input class="form-control" name="ecu" placeholder="Specify ECU"></div></div>
+
+        <div class="fld fld_12">
+          <div class="form-group"><div class="form-control-static" id="power_increase_box"><a href="#" id="view_power_increase" class="view-power-increase link-color" style="display:none">View power increase</a></div></div>
+        </div>
+
+        <div class="fld fld_12 form-group hide" id="wrap_vehicle_type">
+          <label class="control-label">Vehicle type<span class="optional">(optional)</span></label>
+          <select class="form-control" name="vehicle_type"><option value="">Make your choice</option><option value="car">Car</option><option value="truck">Truck</option><option value="agriculture">Agriculture</option><option value="bikes">Bike</option><option value="boats">Boat</option></select>
+        </div>
+
+        <div class="fld fld_6"><label class="control-label required">Engine HP *</label><div class="form-group"><input class="form-control" name="power_hp" type="number" id="vehicle_power_hp" min="1" max="10000" placeholder="e.g. 150"></div></div>
+        <div class="fld fld_6"><label class="control-label required">Engine kW *</label><div class="form-group"><input class="form-control" name="power_kw" type="number" id="vehicle_power_kw" min="1" max="10000" placeholder="e.g. 110"></div></div>
+
+        <div class="fld fld_6 form-group">
+          <label class="control-label required">Year *</label>
+          <select class="form-control" name="year" required><option value="">Make your choice</option><% for(let y=2026;y>=1990;y--){ %><option value="<%= y %>"><%= y %></option><% } %></select>
+        </div>
+        <div class="fld fld_6 form-group">
+          <label class="control-label required">Gearbox *</label>
+          <select class="form-control" name="gearbox_id" required>
+            <option value="">Make your choice</option>
+            <% tuningData.gearboxes.forEach((g,i)=>{ %><option value="<%= 1826+i %>" data-name="<%= g %>"><%= g %></option><% }) %>
+          </select>
+        </div>
+        <div class="fld fld_6"><label class="control-label">License plate<span class="optional">(optional)</span></label><div class="form-group"><input class="form-control" name="license_plate" maxlength="20" placeholder="XX-XX-XX"></div></div>
+        <div class="fld fld_6"><label class="control-label">VIN<span class="optional">(optional)</span></label><div class="form-group"><input class="form-control" name="vin" minlength="17" maxlength="17" placeholder="17 characters"></div></div>
+        <div class="fld fld_12 form-group">
+          <label class="control-label">Octane rating<span class="optional">(optional)</span></label>
+          <select class="form-control" name="octane_rating"><option value="">Make your choice</option><option value="91AKI / 95RON">91AKI / 95RON</option><option value="93AKI / 98RON">93AKI / 98RON</option><option value="95AKI / 102RON">95AKI / 102RON</option><option value="Racegas 100+ RON / 105+ RON">Racegas 100+ RON / 105+ RON</option></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECU details -->
+  <div class="Block">
+    <div class="Block__header">ECU details</div>
+    <div class="Block__content">
+      <div class="Form flex">
+        <div class="fld fld_3 form-group">
+          <label class="control-label required">Tool type *</label>
+          <select class="form-control" name="tool_type" required><option value="">Make your choice</option><option value="master">Master</option><option value="slave">Slave</option></select>
+        </div>
+        <div class="fld fld_3 form-group">
+          <label class="control-label required">Read method *</label>
+          <select class="form-control" name="read_method_id" required id="read_method_id">
+            <option value="">Make your choice</option>
+            <% tuningData.readMethods.forEach(m=>{ %><option value="<%= m %>"><%= m %></option><% }) %>
+          </select>
+        </div>
+        <div class="fld fld_6 fld_spacer"></div>
+        <div class="fld fld_6 hide" id="wrap_read_other"><label class="control-label required">Read method *</label><div class="form-group"><input class="form-control" name="read_method_other" placeholder="Specify read method"></div></div>
+        <div class="fld fld_6 fld_spacer hide" id="spacer_read"></div>
+        <div class="fld fld_3"><label class="control-label">Hardware number<span class="optional">(optional)</span></label><div class="form-group"><input class="form-control" name="hardware_number" placeholder="e.g. 028101XXXX"></div></div>
+        <div class="fld fld_3"><label class="control-label">Software number<span class="optional">(optional)</span></label><div class="form-group"><input class="form-control" name="software_number" placeholder="e.g. 1039XXXXXX"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tuning type -->
+  <div class="Block">
+    <div class="Block__header">Tuning type</div>
+    <div class="Block__content">
+      <div class="Form flex">
+        <div class="RadioWrapper fld fld_6 form-group">
+          <fieldset class="border" style="border:1px solid var(--border);padding:12px">
+            <% tuningTypes.forEach(t=>{ %>
+              <div class="fld fld_12"><label class="FancyRadio"><input type="radio" name="tuning_type_id" value="<%= t.id %>" required><span></span><span><%= t.label %></span></label></div>
+            <% }) %>
+          </fieldset>
+        </div>
+        <div class="fld fld_12" id="tuningOptionsContainer" style="display:none">
+          <h5 class="fld__label" style="margin:12px 0 8px;font-size:13px">Optional tuning options</h5>
+          <div id="tuningOptionsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- File to modify -->
+  <div class="Block">
+    <div class="Block__header">File to modify</div>
+    <div class="Block__content">
+      <div class="Form flex">
+        <div class="fld fld_12 FileUploader">
+          <div class="form-group">
+            <label class="control-label required">File to modify *</label>
+            <div style="font-size:11px;color:#78909c;margin-bottom:6px">Only files smaller than 20MB</div>
+            <div class="FileUploader-file border border-radius-medium" id="dropOriginal" style="border:1px dashed var(--border);padding:20px;text-align:center;background:#fafafa;cursor:pointer">
+              <div style="width:40px;height:40px;background:var(--primary);margin:0 auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff"><i class="fa fa-plus"></i></div>
+              <div style="font-size:12px;color:#78909c" id="originalFileName">Drop your file(s) here or click to browse</div>
+              <input type="file" id="originalFile" name="originalFile" style="display:none" accept=".bin,.hex,.ori,.mod,.zip,.rar">
+            </div>
+          </div>
+        </div>
+        <div class="fld fld_12 FileUploader hide" id="wrap_tcu_file">
+          <div class="form-group">
+            <label class="control-label">TCU file<span class="optional">(optional)</span></label>
+            <div style="font-size:11px;color:#78909c;margin-bottom:6px">Only files smaller than 20MB</div>
+            <div class="FileUploader-file border" id="dropTcu" style="border:1px dashed var(--border);padding:20px;text-align:center;background:#fafafa;cursor:pointer">
+              <div style="width:40px;height:40px;background:#263238;margin:0 auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff"><i class="fa fa-plus"></i></div>
+              <div style="font-size:12px;color:#78909c" id="tcuFileName">Drop your TCU file here</div>
+              <input type="file" id="tcuFile" name="tcuFile" style="display:none">
+            </div>
+          </div>
+        </div>
+        <div class="fld fld_12">
+          <h5 class="fld__label fld--no-margin"><label class="control-label">Optional attachments <i class="fa fa-info-circle" tabindex="0" data-tooltip="Extra files that can be used for tuning the file. Such as data logs, dynographs, or DTC reports."></i><span class="optional">(optional)</span></label></h5>
+          <div style="font-size:11px;color:#78909c;margin-bottom:6px">Only files smaller than 20MB</div>
+          <div id="attachmentsList" style="border:1px solid var(--border);min-height:60px;padding:10px;background:#fafafa;margin-bottom:10px;display:none"></div>
+          <div class="FileUploader FileUploader--bar" id="dropAttachments" style="border:1px dashed var(--border);padding:14px;text-align:center;background:#fff;cursor:pointer">
+            <span style="font-size:12px">Drop your file(s) here</span> <button type="button" class="btn btn-ghost" style="padding:6px 12px;font-size:11px;margin-left:8px">or click to browse</button>
+            <input type="file" id="attachments" name="attachments" multiple style="display:none">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modified parts -->
+  <div class="Block">
+    <div class="Block__header">Modified parts</div>
+    <div class="Block__content">
+      <div class="Form flex">
+        <div class="fld fld_7 form-group">
+          <label class="control-label required">Does the car have modified parts? *</label>
+          <select class="form-control" name="has_modified_parts" required id="has_modified_parts">
+            <option value="">Make your choice</option><option value="1">Yes</option><option value="0">No</option>
+          </select>
+        </div>
+        <div class="fld fld_7 hide" id="wrap_modified_notice">
+          <div class="Notice Notice--neutral"><div>In order to provide you with the best possible service, we would like to ask you to complete the list below in as much detail as possible.</div></div>
+        </div>
+        <div class="fld fld_12 hide" id="wrap_modified_parts">
+          <div class="Form flex">
+            <div class="fld fld_12 form-group"><label class="FancyCheckbox"><input type="checkbox" name="modified_installed"> <span></span> <span>modified parts installed? <i class="fa fa-info-circle"></i></span></label></div>
+            <div class="fld fld_12 hide" id="wrap_modified_remarks"><label class="control-label">Remarks<span class="optional">(optional)</span></label><div class="form-group"><textarea class="form-control" name="modified_remarks" rows="3"></textarea></div></div>
+          </div>
+        </div>
+        <div class="fld fld_12 hide" id="wrap_modified_parts_remarks">
+          <label class="control-label">Remarks<span class="optional">(optional)</span></label>
+          <div class="form-group"><textarea class="form-control" name="modified_parts_remarks" rows="3" placeholder="Specify exhaust, turbo, intercooler, etc."></textarea></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Service -->
+  <div class="Block">
+    <div class="Block__header">Service</div>
+    <div class="Block__content">
+      <div class="Form flex">
+        <div class="fld fld_6 form-group">
+          <label class="control-label required">Time frame *</label>
+          <select class="form-control" name="time_frame" required><option value="">Make your choice</option><option value="asap">ASAP</option><option value="max_3">2-3 hours</option><option value="max_6">5-6 hours</option></select>
+        </div>
+        <div class="fld fld_12"><label class="control-label">Info<span class="optional">(optional)</span></label><div class="form-group"><textarea class="form-control" name="info" rows="3" placeholder="Additional info for engineer (e.g. pops loud, v-max limited to 250)..."></textarea></div></div>
+        <div class="fld fld_12 form-group"><label class="FancyCheckbox"><input type="checkbox" name="terms_and_conditions" required> <span></span> <span>I have read and agree to the <a href="/legal/terms-and-conditions" target="_blank">Terms and conditions</a></span></label></div>
+        <div class="fld fld_12 form-group"><label class="FancyCheckbox"><input type="checkbox" name="refund_policy" required> <span></span> <span>I have read and agree to the <a href="/legal/refund-policy" target="_blank">Refund policy</a></span></label></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:16px">
+    <a href="/account/file-services" class="btn btn-ghost">Cancel</a>
+    <button type="submit" class="btn btn-primary" id="submitBtn" style="min-width:160px">Submit file service</button>
+  </div>
+  <div id="submitError" class="error-box" style="display:none;margin-top:12px"></div>
+</form>
+
+<script>
+const tuningData = <%- JSON.stringify(tuningData) %>;
+const vehiclesData = <%- JSON.stringify(vehicles) %>;
+</script>
+
+<%- include('partials/panel-footer') %>

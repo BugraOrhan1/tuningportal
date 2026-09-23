@@ -1,0 +1,31 @@
+<%- include('partials/panel-layout', {title: 'File services | File Panel'}) %>
+<div class="Crumbs"><p><span><a href="/account"><i class="fa fa-home"></i></a></span> <span class="sep">></span> <span>File services</span></p></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+  <h1>File services</h1>
+  <a href="/account/file-services/new-file-service" class="btn btn-primary">+ New file service</a>
+</div>
+
+<div class="Block">
+  <div class="Block__content" style="padding:0">
+    <% if (services.length===0) { %>
+      <div style="padding:32px;text-align:center;color:#78909c"><i class="fa fa-inbox" style="font-size:32px;display:block;margin-bottom:10px"></i>Geen file services gevonden.<br><a href="/account/file-services/new-file-service" class="btn btn-primary" style="margin-top:12px">Maak nieuwe file service</a></div>
+    <% } else { %>
+      <table class="datagrid"><thead><tr><th>ID</th><th>Vehicle</th><th>ECU</th><th>Tuning type</th><th>Files</th><th>Status</th><th>Credits</th><th>Actions</th></tr></thead><tbody>
+        <% services.forEach(s=>{ %>
+          <tr>
+            <td><strong><%= s.id.slice(0,8).toUpperCase() %></strong><div style="font-size:11px;color:#78909c"><%= new Date(s.createdAt).toLocaleString('nl-NL') %></div></td>
+            <td><%= s.vehicle.makeName %> <%= s.vehicle.modelName %><br><span style="font-size:11px;color:#78909c"><%= s.vehicle.engineName %> • <%= s.vehicle.year %> • <%= s.vehicle.license_plate || '-' %></span></td>
+            <td><span style="font-size:11px"><%= s.vehicle.ecuName || '-' %></span><br><span style="font-size:11px;color:#78909c"><%= s.ecuDetails.tool_type %> • <%= s.ecuDetails.read_method_id %></span></td>
+            <td style="font-size:12px"><%= s.tuning.tuning_type_label %><% if(s.tuning.options.length){ %><br><span style="font-size:11px;color:#78909c"><%= s.tuning.options.length %> options</span><% } %></td>
+            <td><% if(s.files.original){ %><a href="<%= s.files.original.path %>" target="_blank" style="font-size:11px"><i class="fa fa-file"></i> Original</a><% } %></td>
+            <td><span class="badge-status badge-<%= s.status %>"><%= s.status %></span><div style="font-size:11px;color:#78909c"><%= s.estimatedDelivery %></div></td>
+            <td><strong><%= s.credits.toFixed(2) %></strong></td>
+            <td><a href="/account/file-services/<%= s.id %>" class="btn btn-ghost" style="padding:6px 10px;font-size:11px">View</a></td>
+          </tr>
+        <% }) %>
+      </tbody></table>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/panel-footer') %>

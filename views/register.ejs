@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Account aanmaken</h1>
+    <p>Maak een klanten account aan voor toegang tot het file-panel.</p>
+    <div id="error" class="error-box" style="display:none"></div>
+    <form id="regForm">
+      <div class="form-group"><label>Naam *</label><input name="name" required placeholder="Bugra Orhan"></div>
+      <div class="form-group"><label>Bedrijfsnaam (optioneel)</label><input name="company" placeholder="Fast-Tuningshop BV"></div>
+      <div class="form-group"><label>E-mail *</label><input name="email" type="email" required placeholder="jouw@email.com"></div>
+      <div class="form-group"><label>Wachtwoord *</label><input name="password" type="password" required placeholder="Min. 6 tekens"></div>
+      <label style="font-size:11px;display:flex;gap:6px;margin:10px 0"><input type="checkbox" required style="width:auto"> Ik ga akkoord met <a href="/legal/terms-and-conditions">Terms and conditions</a> en <a href="/legal/refund-policy">Refund policy</a></label>
+      <button class="btn btn-primary" style="width:100%" type="submit">Registreren</button>
+    </form>
+    <p style="margin-top:14px;text-align:center;font-size:12px">Al een account? <a href="/login">Inloggen</a></p>
+  </div>
+</div>
+<script>
+document.getElementById('regForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const body = Object.fromEntries(fd.entries());
+  const res = await fetch('/api/auth/register', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  const data = await res.json();
+  if(!res.ok){ document.getElementById('error').style.display='block'; document.getElementById('error').textContent = data.error; return; }
+  window.location = '/account';
+});
+</script>
+<%- include('partials/footer') %>

@@ -1,0 +1,62 @@
+<%- include('partials/panel-layout', {title: 'File service detail'}) %>
+<div class="Crumbs"><p><span><a href="/account"><i class="fa fa-home"></i></a></span> <span class="sep">></span> <span><a href="/account/file-services">File services</a></span> <span class="sep">></span> <span><%= svc.id.slice(0,8).toUpperCase() %></span></p></div>
+<h1>File service <%= svc.id.slice(0,8).toUpperCase() %> <span class="badge-status badge-<%= svc.status %>" style="font-size:12px;vertical-align:middle"><%= svc.status %></span></h1>
+<div class="EstimatedBanner"><div class="EstimatedBanner__title">The estimated delivery time is</div><div class="EstimatedBanner__duration"><%= svc.estimatedDelivery %></div></div>
+
+<div class="Block">
+  <div class="Block__header">Vehicle</div>
+  <div class="Block__content">
+    <table class="datagrid"><tbody>
+      <tr><td style="width:200px;color:#78909c">Make / Model</td><td><strong><%= svc.vehicle.makeName %> <%= svc.vehicle.modelName %></strong> (<%= svc.vehicle.generationName %>)</td></tr>
+      <tr><td style="color:#78909c">Engine / ECU</td><td><%= svc.vehicle.engineName %> • <%= svc.vehicle.ecuName %></td></tr>
+      <tr><td style="color:#78909c">Power</td><td><%= svc.vehicle.power_hp %> hp / <%= svc.vehicle.power_kw %> kW</td></tr>
+      <tr><td style="color:#78909c">Year / Gearbox / License</td><td><%= svc.vehicle.year %> • <%= svc.vehicle.gearbox || svc.vehicle.gearbox_id %> • <%= svc.vehicle.license_plate || '-' %> • VIN <%= svc.vehicle.vin || '-' %></td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="Block">
+  <div class="Block__header">ECU details</div>
+  <div class="Block__content">
+    <table class="datagrid"><tbody>
+      <tr><td style="width:200px;color:#78909c">Tool type</td><td><%= svc.ecuDetails.tool_type %></td></tr>
+      <tr><td style="color:#78909c">Read method</td><td><%= svc.ecuDetails.read_method_id %> <%= svc.ecuDetails.read_method_other ? '('+svc.ecuDetails.read_method_other+')' : '' %></td></tr>
+      <tr><td style="color:#78909c">HW / SW</td><td><%= svc.ecuDetails.hardware_number || '-' %> • <%= svc.ecuDetails.software_number || '-' %></td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<div class="Block">
+  <div class="Block__header">Tuning type</div>
+  <div class="Block__content">
+    <p><strong><%= svc.tuning.tuning_type_label %></strong> — <%= svc.credits.toFixed(2) %> credits</p>
+    <% if(svc.tuning.options && svc.tuning.options.length){ %>
+      <p style="margin-top:8px;font-size:12px;color:#78909c">Options:</p>
+      <ul style="margin-left:16px;font-size:12px">
+        <% svc.tuning.options.forEach(o=>{ %><li><%= o %></li><% }) %>
+      </ul>
+    <% } %>
+  </div>
+</div>
+
+<div class="Block">
+  <div class="Block__header">Files</div>
+  <div class="Block__content">
+    <% if(svc.files.original){ %><p><i class="fa fa-file"></i> Original: <a href="<%= svc.files.original.path %>" target="_blank"><%= svc.files.original.originalname %></a></p><% } %>
+    <% if(svc.files.tcu){ %><p><i class="fa fa-file"></i> TCU: <a href="<%= svc.files.tcu.path %>" target="_blank"><%= svc.files.tcu.originalname %></a></p><% } %>
+    <% if(svc.files.attachments && svc.files.attachments.length){ %><p>Attachments:</p><ul><% svc.files.attachments.forEach(f=>{ %><li><a href="<%= f.path %>" target="_blank"><%= f.originalname %></a></li><% }) %></ul><% } %>
+  </div>
+</div>
+
+<div class="Block">
+  <div class="Block__header">Service</div>
+  <div class="Block__content">
+    <p><strong>Time frame:</strong> <%= svc.service.time_frame %></p>
+    <p><strong>Info:</strong> <%= svc.service.info || '-' %></p>
+    <p><strong>Submitted:</strong> <%= new Date(svc.createdAt).toLocaleString('nl-NL') %></p>
+  </div>
+</div>
+
+<a href="/account/file-services" class="btn btn-ghost"><i class="fa fa-arrow-left"></i> Back to file services</a>
+
+<%- include('partials/panel-footer') %>

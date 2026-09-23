@@ -1,0 +1,12 @@
+<%- include('partials/panel-layout', {title: 'Edit account'}) %>
+<h1>Edit account</h1>
+<div class="Block"><div class="Block__content">
+  <div class="Form flex">
+    <div class="fld fld_6"><label>Naam</label><input class="form-control" value="<%= user.name %>" disabled></div>
+    <div class="fld fld_6"><label>E-mail</label><input class="form-control" value="<%= user.email %>" disabled></div>
+    <div class="fld fld_6"><label>Bedrijf</label><input class="form-control" value="<%= user.company %>" disabled></div>
+    <div class="fld fld_6"><label>Credits</label><input class="form-control" value="<%= user.credits.toFixed(2) %>" disabled></div>
+  </div>
+  <a href="/logout" class="btn btn-primary" style="margin-top:16px">Logout</a>
+</div></div>
+<%- include('partials/panel-footer') %>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= typeof title !== 'undefined' ? title : 'Fast-Chiptuningfiles | Chiptuning files & ECU Tuning' %></title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <span><i class="fa fa-envelope"></i> info@fast-chiptuningfiles.com</span>
+      <span><i class="fa fa-phone"></i> +31 78 783 00 13</span>
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:11px;color:#78909c">NL • EN</span>
+    </div>
+  </div>
+</div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="logo">
+      <img src="https://fast-chiptuningfiles.com/wp-content/uploads/2024/03/2.png" alt="Fast Chiptuningfiles" onerror="this.style.display='none'">
+      <div class="logo-text">FAST<span>CHIPTUNINGFILES</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/#prijzen">Prijzen</a></li>
+      <li><a href="/tuning-specs">Tuning specs</a></li>
+      <li><a href="/#over">Over ons</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;gap:8px;align-items:center">
+      <% if (user) { %>
+        <a href="/account" class="btn btn-primary" style="padding:8px 14px;font-size:12px"><i class="fa fa-dashboard"></i> File Panel</a>
+        <a href="/logout" style="font-size:12px;color:#78909c">Logout</a>
+        <div class="Avatar" style="width:30px;height:30px;font-size:11px"><%= user.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() %></div>
+      <% } else { %>
+        <a href="/login" class="btn btn-ghost" style="padding:8px 16px;font-size:12px">Inloggen</a>
+        <a href="/register" class="btn btn-primary" style="padding:8px 16px;font-size:12px">Registreren</a>
+      <% } %>
+    </div>
+  </div>
+</nav>

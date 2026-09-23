@@ -1,0 +1,91 @@
+{
+  "tuningTypes": [
+    {"id": 1933, "name": "Car Tuning (Stage 1)", "credits": 1.0, "label": "Car Tuning (Stage 1) (1.00 credit)"},
+    {"id": 1934, "name": "Car tuning (Stage 2)", "credits": 1.2, "label": "Car tuning (Stage 2) (1.20 credits)"},
+    {"id": 1935, "name": "Car tuning (Stage 3)", "credits": 5.0, "label": "Car tuning (Stage 3) (5.00 credits)"},
+    {"id": 1939, "name": "Only options (Car)", "credits": 0.0, "label": "Only options (Car) (0.00 credits)"},
+    {"id": 1937, "name": "TCU Tuning (Stage1)(includes internal torque and shifting speed faster)", "credits": 1.0, "label": "TCU Tuning (Stage1)(includes internal torque and shifting speed faster) (1.00 credit)"},
+    {"id": 1938, "name": "Only options (TCU)", "credits": 0.0, "label": "Only options (TCU) (0.00 credits)"},
+    {"id": 1936, "name": "Truck/Agriculture tuning (Stage 1)", "credits": 1.0, "label": "Truck/Agriculture tuning (Stage 1) (1.00 credit)"},
+    {"id": 1940, "name": "Only options (Truck/Agriculture)", "credits": 0.0, "label": "Only options (Truck/Agriculture) (0.00 credits)"},
+    {"id": 1948, "name": "Checksum ( if possible )", "credits": 0.5, "label": "Checksum ( if possible ) (0.50 credits)"},
+    {"id": 1946, "name": "Immo off (If possible)", "credits": 1.0, "label": "Immo off (If possible) (1.00 credit)"},
+    {"id": 1941, "name": "E85 Conversion", "credits": 2.0, "label": "E85 Conversion (2.00 credits)"},
+    {"id": 1942, "name": "Back to stock", "credits": 0.2, "label": "Back to stock (0.20 credits)"},
+    {"id": 1944, "name": "MapSwitch Simos 18.X Edc17.X Med17.X med9.X MG1 MD1", "credits": 5.0, "label": "MapSwitch Simos 18.X Edc17.X Med17.X med9.X MG1 MD1 (5.00 credits)"},
+    {"id": 1945, "name": "Tuning file review", "credits": 0.5, "label": "Tuning file review (0.50 credits)"},
+    {"id": 2078, "name": "Ecu Clone Service", "credits": 0.5, "label": "Ecu Clone Service (0.50 credits)"}
+  ],
+  "optionsByType": {
+    "1933": [
+      {"id": 15296, "name": "AdBlue / SCR", "credits": 1.0},
+      {"id": 15297, "name": "AdBlue + DPF off", "credits": 1.5, "hasDTC": true},
+      {"id": 15298, "name": "Antilag", "credits": 1.0},
+      {"id": 15299, "name": "Cylinder on Demand off", "credits": 0.2},
+      {"id": 15300, "name": "Decat", "credits": 0.2},
+      {"id": 15301, "name": "DPF / OPF", "credits": 0.5},
+      {"id": 15302, "name": "DPF / OPF + EGR", "credits": 0.5},
+      {"id": 15303, "name": "DSG Fart", "credits": 0.5},
+      {"id": 15304, "name": "DTC", "credits": 0.5, "hasDTC": true},
+      {"id": 15305, "name": "E85 FlexFluel", "credits": 2.0},
+      {"id": 15306, "name": "EGR", "credits": 0.2},
+      {"id": 15307, "name": "Evaporative Emission Control System (EVAP)", "credits": 0.2},
+      {"id": 15308, "name": "Exhaust Flaps", "credits": 0.2},
+      {"id": 15309, "name": "Hard Cut limiter (Flames)", "credits": 1.0, "hasRPM": true},
+      {"id": 15310, "name": "Hot start / cold start FIX", "credits": 0.5},
+      {"id": 15311, "name": "Idle RPM", "credits": 0.5, "hasRPM": true},
+      {"id": 15313, "name": "Launch Control", "credits": 0.5},
+      {"id": 15315, "name": "Map sensor Set", "credits": 0.5},
+      {"id": 15318, "name": "O2 OFF", "credits": 0.2},
+      {"id": 15319, "name": "OPF OFF", "credits": 0.5},
+      {"id": 15322, "name": "Pop & bang/crackle map", "credits": 1.0, "hasRPM": true, "hasLoudness": true},
+      {"id": 15323, "name": "Pop & bang/crackle map (Sport/button)", "credits": 1.2, "hasRPM": true, "hasLoudness": true},
+      {"id": 15325, "name": "Rev Limiter", "credits": 0.2, "hasRPM": true},
+      {"id": 15329, "name": "Start / Stop system off", "credits": 0.5},
+      {"id": 15330, "name": "Startup roar", "credits": 0.5},
+      {"id": 15331, "name": "Swirl Flaps off", "credits": 0.5},
+      {"id": 15333, "name": "V-Max Off", "credits": 0.0},
+      {"id": 15334, "name": "V-Max Limited to custom speed", "credits": 0.5}
+    ],
+    "1934": [
+      {"id": 15335, "name": "AdBlue / SCR", "credits": 1.0},
+      {"id": 15336, "name": "Antilag", "credits": 1.0},
+      {"id": 15339, "name": "Decat (free)", "credits": 0.0},
+      {"id": 15341, "name": "DSG Farts", "credits": 0.5},
+      {"id": 15342, "name": "EGR", "credits": 0.2},
+      {"id": 15343, "name": "DPF", "credits": 0.2},
+      {"id": 15345, "name": "DTC off (free)", "credits": 0.0, "hasDTC": true},
+      {"id": 15348, "name": "Hard Cut limiter (Flames)", "credits": 0.5, "hasRPM": true},
+      {"id": 15351, "name": "Launch controle", "credits": 0.5},
+      {"id": 15357, "name": "Pop & bang/crackle map", "credits": 1.0, "hasRPM": true, "hasLoudness": true},
+      {"id": 15358, "name": "Pop & bang/crackle map (Sport/button)", "credits": 1.2, "hasRPM": true, "hasLoudness": true},
+      {"id": 15360, "name": "Rev Limiter (free)", "credits": 0.0, "hasRPM": true},
+      {"id": 15362, "name": "START/STOP SYSTEM OFF", "credits": 0.2},
+      {"id": 15365, "name": "V-Max Off (free)", "credits": 0.0}
+    ],
+    "1937": [
+      {"id": 16057, "name": "Activate Launch", "credits": 0.5, "hasRPM": true},
+      {"id": 16058, "name": "Clutch Pressure", "credits": 1.0},
+      {"id": 16059, "name": "Custom Shifting RPM", "credits": 1.0},
+      {"id": 16060, "name": "Gear Display (if possible)", "credits": 0.2},
+      {"id": 16061, "name": "Kick Down Delete", "credits": 0.2}
+    ],
+    "1939": [
+      {"id": 15256, "name": "AdBlue / SCR", "credits": 1.0},
+      {"id": 15258, "name": "DPF OFF", "credits": 1.0},
+      {"id": 15259, "name": "DPF + EGR OFF", "credits": 1.2},
+      {"id": 15227, "name": "DTC off", "credits": 0.5, "hasDTC": true},
+      {"id": 15229, "name": "EGR off", "credits": 0.5},
+      {"id": 15271, "name": "Hard Cut limiter", "credits": 1.0, "hasRPM": true},
+      {"id": 15283, "name": "Pop & bang/crackle map", "credits": 1.0, "hasRPM": true, "hasLoudness": true},
+      {"id": 15286, "name": "Rev Limiter", "credits": 0.5, "hasRPM": true},
+      {"id": 15292, "name": "V-Max Off", "credits": 0.5}
+    ]
+  },
+  "readMethods": [
+    "Abrites","Alientech Kess","Alientech KTAG","Alientech Powergate","Autotuner Bench","Autotuner Bootmode","Autotuner OBD","bFlash Bench","bFlash BOOT","bFlash OBD","Bitbox","CMD BDM","CMD Bench","CMD OBD","CMD Tricore Boottool","DFB Technology","Dimsport Genius","Dimsport New Trasdata","Dimtronic","Eprom programmer","EVC BDM","EVC BSL","FC200 BENCH","FC200 OBD","Femto (Bmw tool)","FGtech","FOXflash BENCH","FOXflash OBD","Frieling i-Boot","Frieling i-Flash","Frieling SPI Wizard","Galetto","Hptuners","I/O Terminal","KT200 BENCH","KT200 OBD","Magic Motorsport MAGPRO Bench/FLex","Magic Motorsport MAGPRO Bootmode","Magic Motorsport MAGPRO OBD","MPPS","OBD Star","PCM-Flash","TGFlash","Otherwise, namely"
+  ],
+  "gearboxes": [
+    "5","6","7","Automatic Transmission","CVT","DCT","DKG","DSG","DSG6","DSG7","Multitronic","SMG","SMG2","SMG3","Tiptronic"
+  ]
+}

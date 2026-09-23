@@ -1,0 +1,11 @@
+<%- include('partials/panel-layout', {title: 'Buy credits'}) %>
+<div class="Crumbs"><p><a href="/account"><i class="fa fa-home"></i></a> <span class="sep">></span> Buy credits</p></div>
+<h1>Buy credits</h1>
+<p style="color:#78909c;margin-bottom:16px">Koop credits om file services in te dienen. Elke Stage 1 file kost 1 credit.</p>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+  <div class="Block"><div class="Block__header">Try-out</div><div class="Block__content" style="text-align:center"><div style="font-size:28px;font-weight:800">€85,-</div><div style="font-size:12px;color:#78909c">1 Credit • €85 / credit</div><a href="#" class="btn btn-primary" style="width:100%;margin-top:12px" onclick="alert('Demo: credits kopen komt hier');return false">Buy now</a></div></div>
+  <div class="Block" style="border-color:var(--primary)"><div class="Block__header" style="background:var(--primary);color:#fff">Workshop — Most popular</div><div class="Block__content" style="text-align:center"><div style="font-size:28px;font-weight:800">€750,-</div><div style="font-size:12px;color:#78909c">10 Credits • €75 / credit <span style="color:#2e7d32">Save €100</span></div><a href="#" class="btn btn-primary" style="width:100%;margin-top:12px" onclick="alert('Demo: credits kopen komt hier');return false">Buy now</a></div></div>
+  <div class="Block"><div class="Block__header">Pro Workshop</div><div class="Block__content" style="text-align:center"><div style="font-size:28px;font-weight:800">€1.750,-</div><div style="font-size:12px;color:#78909c">25 Credits • €70 / credit</div><a href="#" class="btn btn-primary" style="width:100%;margin-top:12px" onclick="alert('Demo: credits kopen komt hier');return false">Buy now</a></div></div>
+</div>
+<div style="margin-top:16px" class="Notice Notice--neutral"><strong>Info:</strong> Credits zijn direct beschikbaar na betaling. Je huidige saldo: <strong><%= user.credits.toFixed(2) %> credits</strong></div>
+<%- include('partials/panel-footer') %>

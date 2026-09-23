@@ -1,0 +1,73 @@
+<%- include('partials/header') %>
+<div style="background:var(--bg);padding:20px 0;border-bottom:1px solid var(--border)">
+  <div style="max-width:1200px;margin:0 auto;padding:0 16px">
+    <h1>Tuning specs</h1>
+    <p style="color:#78909c;font-size:13px">Bekijk alle tuning mogelijkheden • Origineel vs. Tuned vergelijking</p>
+  </div>
+</div>
+<div style="max-width:1200px;margin:0 auto;padding:20px 16px">
+  <div class="Block">
+    <div class="Block__header">Zoek je voertuig</div>
+    <div class="Block__content">
+      <div class="Form flex">
+        <div class="fld fld_2"><label>Make</label><select id="spec-make" class="form-control"><option value="">Make your choice</option><% vehicles.makes.forEach(m=>{ %><option value="<%= m.id %>"><%= m.name %></option><% }) %></select></div>
+        <div class="fld fld_2"><label>Model</label><select id="spec-model" class="form-control" disabled><option value="">Choose a model</option></select></div>
+        <div class="fld fld_2"><label>Generation</label><select id="spec-generation" class="form-control" disabled><option value="">Choose a generation</option></select></div>
+        <div class="fld fld_3"><label>Engine</label><select id="spec-engine" class="form-control" disabled><option value="">Choose an engine</option></select></div>
+      </div>
+      <div id="spec-result" style="display:none;margin-top:20px"></div>
+    </div>
+  </div>
+
+  <h3 style="margin:20px 0 12px">Populaire engines</h3>
+  <div class="Block"><div class="Block__content" style="padding:0">
+    <table class="datagrid"><thead><tr><th>Vehicle</th><th>Engine</th><th>ECU</th><th>Origineel</th><th>Tuned</th><th>Winst</th></tr></thead><tbody>
+      <% vehicles.engines.slice(0,12).forEach(e=>{ const gen = vehicles.generations.find(g=>g.id===e.generationId); const mod = vehicles.models.find(m=>m.id===gen?.modelId); const make = vehicles.makes.find(mm=>mm.id===mod?.makeId); const ecu = vehicles.ecus.find(ec=>ec.engineId===e.id); %>
+        <tr>
+          <td><%= make ? make.name : '' %> <%= mod ? mod.name : '' %> <%= gen ? gen.name : '' %></td>
+          <td><%= e.name %></td>
+          <td style="font-size:11px"><%= ecu ? ecu.name : '-' %></td>
+          <td><%= e.powerHp %> hp / <%= e.torqueNm %> Nm</td>
+          <td style="color:var(--primary);font-weight:700"><%= e.tunedHp %> hp / <%= e.tunedNm %> Nm</td>
+          <td><span class="gain">+<%= e.tunedHp - e.powerHp %> hp / +<%= e.tunedNm - e.torqueNm %> Nm</span></td>
+        </tr>
+      <% }) %>
+    </tbody></table>
+  </div></div>
+</div>
+<script>
+(function(){
+  const makes = <%- JSON.stringify(vehicles.makes) %>;
+  const models = <%- JSON.stringify(vehicles.models) %>;
+  const gens = <%- JSON.stringify(vehicles.generations) %>;
+  const engines = <%- JSON.stringify(vehicles.engines) %>;
+  const ecus = <%- JSON.stringify(vehicles.ecus) %>;
+  const selMake=document.getElementById('spec-make'), selModel=document.getElementById('spec-model'), selGen=document.getElementById('spec-generation'), selEng=document.getElementById('spec-engine'), result=document.getElementById('spec-result');
+  selMake.addEventListener('change',()=>{
+    selModel.innerHTML='<option value="">Choose a model</option>'; selGen.innerHTML='<option value="">Choose a generation</option>'; selEng.innerHTML='<option value="">Choose an engine</option>';
+    selModel.disabled=!selMake.value; selGen.disabled=true; selEng.disabled=true;
+    if(!selMake.value) return;
+    models.filter(m=>String(m.makeId)===selMake.value).forEach(m=>{ const o=document.createElement('option'); o.value=m.id; o.textContent=m.name; selModel.appendChild(o); });
+  });
+  selModel.addEventListener('change',()=>{
+    selGen.innerHTML='<option value="">Choose a generation</option>'; selEng.innerHTML='<option value="">Choose an engine</option>';
+    selGen.disabled=!selModel.value; selEng.disabled=true;
+    if(!selModel.value) return;
+    gens.filter(g=>String(g.modelId)===selModel.value).forEach(g=>{ const o=document.createElement('option'); o.value=g.id; o.textContent=g.name; selGen.appendChild(o); });
+  });
+  selGen.addEventListener('change',()=>{
+    selEng.innerHTML='<option value="">Choose an engine</option>';
+    selEng.disabled=!selGen.value;
+    if(!selGen.value) return;
+    engines.filter(e=>String(e.generationId)===selGen.value).forEach(e=>{ const o=document.createElement('option'); o.value=e.id; o.textContent=e.name; selEng.appendChild(o); });
+  });
+  selEng.addEventListener('change',()=>{
+    if(!selEng.value){ result.style.display='none'; return; }
+    const e=engines.find(x=>String(x.id)===selEng.value);
+    const ecu=ecus.find(x=>String(x.engineId)===e.id);
+    result.style.display='block';
+    result.innerHTML=`<div style="border:1px solid var(--border);background:#fff7f3;padding:16px"><h4 style="margin-bottom:10px">${e.name} <span style="font-weight:400;font-size:12px;color:#78909c">ECU: ${ecu?ecu.name:'-'}</span></h4><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center"><div style="background:#fff;border:1px solid var(--border);padding:12px"><div style="font-size:11px;color:#78909c">ORIGINEEL</div><div style="font-size:18px;font-weight:800">${e.powerHp} hp</div><div style="font-size:11px;color:#78909c">${e.powerKw} kW • ${e.torqueNm} Nm</div></div><div style="background:var(--primary);color:#fff;padding:12px"><div style="font-size:11px;opacity:.9">TUNED</div><div style="font-size:18px;font-weight:800">${e.tunedHp} hp</div><div style="font-size:11px;opacity:.9">${e.tunedKw} kW • ${e.tunedNm} Nm</div></div><div style="background:#e8f5e9;border:1px solid #c8e6c9;padding:12px"><div style="font-size:11px;color:#2e7d32">WINST</div><div style="font-size:18px;font-weight:800;color:#2e7d32">+${e.tunedHp-e.powerHp} hp</div><div style="font-size:11px;color:#2e7d32">+${e.tunedNm-e.torqueNm} Nm</div></div></div><div style="margin-top:12px;display:flex;gap:8px"><a href="/register" class="btn btn-primary" style="flex:1">Bestel file • 1 credit</a><a href="/account/file-services/new-file-service" class="btn btn-ghost">Direct aanvragen</a></div></div>`;
+  });
+})();
+</script>
+<%- include('partials/footer') %>

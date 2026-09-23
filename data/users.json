@@ -1,0 +1,20 @@
+[
+  {
+    "id": "e3fb63bd-a9bd-4c1a-8197-6532736ddc58",
+    "name": "Bugra Orhan",
+    "email": "bugra@test.com",
+    "company": "Test BV",
+    "password": "$2b$10$enTvJ1S5wAPgs8wWDOtWeuywVhpOnQqcjBzOw.bmk77XbM3Te4Sfu",
+    "credits": 2,
+    "createdAt": "2026-09-23T19:45:43.224Z"
+  },
+  {
+    "id": "38b9a52e-f758-4ff2-b260-544c17e109b8",
+    "name": "Demo User",
+    "email": "demo@fast.local",
+    "company": "Fast-Tuningshop",
+    "password": "$2b$10$qThzbbtxw8WpzS1eGbRqGek2QjJeZ8cm2CEDs1R.cHvNKIk8yVHq6",
+    "credits": 5,
+    "createdAt": "2026-09-23T19:45:49.533Z"
+  }
+]

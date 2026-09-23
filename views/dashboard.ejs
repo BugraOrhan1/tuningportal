@@ -1,0 +1,43 @@
+<%- include('partials/panel-layout', {title: 'Home | File Panel'}) %>
+<div class="Crumbs"><p><span><a href="/account"><i class="fa fa-home"></i></a></span> <span class="sep">></span> <span>Home</span></p></div>
+<h1>Welkom, <%= user.name %>! 👋</h1>
+<p style="color:#78909c;margin:6px 0 16px">Je bevindt je in het klanten file-panel. Hier beheer je tuning files, credits en support.</p>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+  <div class="Block" style="margin-bottom:0"><div class="Block__content" style="text-align:center"><div style="font-size:22px;font-weight:800;color:var(--primary)"><%= services.length %></div><div style="font-size:11px;color:#78909c;text-transform:uppercase;letter-spacing:.5px">File services</div></div></div>
+  <div class="Block" style="margin-bottom:0"><div class="Block__content" style="text-align:center"><div style="font-size:22px;font-weight:800"><%= user.credits.toFixed(2) %></div><div style="font-size:11px;color:#78909c;text-transform:uppercase;letter-spacing:.5px">Tuning credits</div></div></div>
+  <div class="Block" style="margin-bottom:0"><div class="Block__content" style="text-align:center"><div style="font-size:22px;font-weight:800">5-10m</div><div style="font-size:11px;color:#78909c;text-transform:uppercase;letter-spacing:.5px">Delivery time</div></div></div>
+  <div class="Block" style="margin-bottom:0"><div class="Block__content" style="text-align:center"><div style="font-size:22px;font-weight:800">24/7</div><div style="font-size:11px;color:#78909c;text-transform:uppercase;letter-spacing:.5px">Support</div></div></div>
+</div>
+
+<div class="Block">
+  <div class="Block__header" style="display:flex;justify-content:space-between;align-items:center">
+    Recent file services
+    <a href="/account/file-services/new-file-service" class="btn btn-primary" style="padding:6px 12px;font-size:12px">+ New file service</a>
+  </div>
+  <div class="Block__content" style="padding:0">
+    <% if (services.length===0) { %>
+      <div style="padding:24px;text-align:center;color:#78909c"><i class="fa fa-folder-open" style="font-size:28px;display:block;margin-bottom:8px"></i> Nog geen file services. <a href="/account/file-services/new-file-service">Maak je eerste file aan</a></div>
+    <% } else { %>
+      <table class="datagrid"><thead><tr><th>ID</th><th>Vehicle</th><th>Type</th><th>Status</th><th>Credits</th><th>Date</th></tr></thead><tbody>
+        <% services.forEach(s=>{ %>
+          <tr>
+            <td><a href="/account/file-services/<%= s.id %>"><%= s.id.slice(0,6).toUpperCase() %></a></td>
+            <td><%= s.vehicle.makeName %> <%= s.vehicle.modelName %> <%= s.vehicle.engineName %></td>
+            <td><%= s.tuning.tuning_type_label %></td>
+            <td><span class="badge-status badge-<%= s.status %>"><%= s.status %></span></td>
+            <td><%= s.credits.toFixed(2) %></td>
+            <td><%= new Date(s.createdAt).toLocaleDateString('nl-NL') %></td>
+          </tr>
+        <% }) %>
+      </tbody></table>
+    <% } %>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div class="Block" style="margin-bottom:0"><div class="Block__header">Quick actions</div><div class="Block__content"><a href="/account/file-services/new-file-service" class="btn btn-primary" style="width:100%;margin-bottom:8px">New file service</a><a href="/account/buy-credits" class="btn btn-ghost" style="width:100%">Buy credits</a></div></div>
+  <div class="Block" style="margin-bottom:0"><div class="Block__header">Support</div><div class="Block__content" style="font-size:12px;color:#78909c"><p>Need help? Our engineers are ready 24/7.</p><a href="/account/support-tickets" class="btn btn-primary" style="margin-top:10px;width:100%">Contact support</a></div></div>
+</div>
+
+<%- include('partials/panel-footer') %>
