@@ -10,7 +10,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'revboost-secret-2025-unique-tuning';
+const JWT_SECRET = process.env.JWT_SECRET || 'mijndomein-secret-2025-unique-tuning';
 const BRAND = {
   name: 'MIJNDOMEIN',
   full: 'MIJNDOMEIN Performance Files',

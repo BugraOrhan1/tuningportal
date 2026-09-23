@@ -1,19 +1,19 @@
 <%- include('partials/header') %>
 <div class="auth-wrap">
   <div class="auth-card">
-    <h1>Inloggen — <%= brand ? brand.name : 'REVBOOST' %></h1>
-    <p>Log in bij je <strong><%= brand ? brand.name : 'REVBOOST' %></strong> klanten file-panel. Alleen klanten met account hebben toegang tot file services. Uniek merk — alle autos via live API.</p>
+    <h1>Inloggen — <%= brand ? brand.name : 'MIJNDOMEIN' %></h1>
+    <p>Log in bij je <strong><%= brand ? brand.name : 'MIJNDOMEIN' %></strong> klanten file-panel. Alleen klanten met account hebben toegang tot file services. Uniek merk — alle autos via live API.</p>
     <% if (typeof error !== 'undefined' && error) { %><div class="error-box" style="display:block"><%= error %></div><% } %>
     <div id="error" class="error-box" style="display:none"></div>
     <form id="loginForm" action="/login" method="POST">
-      <div class="form-group"><label>E-mail</label><input name="email" type="email" required placeholder="jouw@email.com" value="demo@revboost.nl"></div>
+      <div class="form-group"><label>E-mail</label><input name="email" type="email" required placeholder="jouw@email.com" value="demo@mijndomein.nl"></div>
       <div class="form-group"><label>Wachtwoord</label><input name="password" type="password" required placeholder="••••••••" value="demo123"></div>
       <input type="hidden" name="redirect" value="<%= redirect %>">
       <button class="btn btn-primary" style="width:100%" type="submit" id="loginBtn">Inloggen</button>
       <div id="loginDebug" style="font-size:11px;color:#78909c;margin-top:8px;display:none"></div>
     </form>
     <p style="margin-top:14px;text-align:center;font-size:12px">Nog geen account? <a href="/register">Registreren</a> • <a href="/">Terug naar website</a></p>
-    <div style="margin-top:16px;padding:10px;background:#fff3ef;border:1px solid #ffccb3;font-size:11px"><strong>Demo account:</strong><br>klik direct op Inloggen met demo@revboost.nl / demo123 — werkt ook via <a href="#" onclick="document.querySelector('[name=email]').value='demo@revboost.nl';document.querySelector('[name=password]').value='demo123';document.getElementById('loginForm').submit();return false;">één klik</a></div>
+    <div style="margin-top:16px;padding:10px;background:#fff3ef;border:1px solid #ffccb3;font-size:11px"><strong>Demo account:</strong><br>klik direct op Inloggen met demo@mijndomein.nl / demo123 (ook demo@revboost.nl werkt) — werkt ook via <a href="#" onclick="document.querySelector('[name=email]').value='demo@mijndomein.nl';document.querySelector('[name=password]').value='demo123';document.getElementById('loginForm').submit();return false;">één klik</a></div>
   </div>
 </div>
 <script>
