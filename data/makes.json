@@ -1,0 +1,597 @@
+[
+  {
+    "id": 125,
+    "name": "Acura",
+    "urlname": "acura"
+  },
+  {
+    "id": 1,
+    "name": "Alfa Romeo",
+    "urlname": "alfa-romeo"
+  },
+  {
+    "id": 70,
+    "name": "Alpina",
+    "urlname": "alpina"
+  },
+  {
+    "id": 118,
+    "name": "Alpine",
+    "urlname": "alpine"
+  },
+  {
+    "id": 63,
+    "name": "Aston Martin",
+    "urlname": "aston-martin"
+  },
+  {
+    "id": 2,
+    "name": "Audi",
+    "urlname": "audi"
+  },
+  {
+    "id": 199,
+    "name": "BAIC",
+    "urlname": "baic"
+  },
+  {
+    "id": 4,
+    "name": "BMW",
+    "urlname": "bmw"
+  },
+  {
+    "id": 231,
+    "name": "BYD",
+    "urlname": "byd"
+  },
+  {
+    "id": 77,
+    "name": "Bentley",
+    "urlname": "bentley"
+  },
+  {
+    "id": 222,
+    "name": "Bestune",
+    "urlname": "bestune"
+  },
+  {
+    "id": 65,
+    "name": "Buick",
+    "urlname": "buick"
+  },
+  {
+    "id": 226,
+    "name": "CMC",
+    "urlname": "cmc"
+  },
+  {
+    "id": 18,
+    "name": "Cadillac",
+    "urlname": "cadillac"
+  },
+  {
+    "id": 138,
+    "name": "Case ih",
+    "urlname": "case-ih"
+  },
+  {
+    "id": 139,
+    "name": "Caterpillar",
+    "urlname": "caterpillar"
+  },
+  {
+    "id": 140,
+    "name": "Challenger",
+    "urlname": "challenger"
+  },
+  {
+    "id": 66,
+    "name": "Changan",
+    "urlname": "changan"
+  },
+  {
+    "id": 228,
+    "name": "Changan Nevo",
+    "urlname": "changan-nevo"
+  },
+  {
+    "id": 217,
+    "name": "Chery",
+    "urlname": "chery"
+  },
+  {
+    "id": 39,
+    "name": "Chevrolet",
+    "urlname": "chevrolet"
+  },
+  {
+    "id": 22,
+    "name": "Chrysler",
+    "urlname": "chrysler"
+  },
+  {
+    "id": 5,
+    "name": "Citro\u00ebn",
+    "urlname": "citroen"
+  },
+  {
+    "id": 131,
+    "name": "Claas",
+    "urlname": "claas"
+  },
+  {
+    "id": 98,
+    "name": "Cupra",
+    "urlname": "cupra"
+  },
+  {
+    "id": 54,
+    "name": "DAF",
+    "urlname": "daf"
+  },
+  {
+    "id": 76,
+    "name": "DS",
+    "urlname": "ds"
+  },
+  {
+    "id": 48,
+    "name": "Dacia",
+    "urlname": "dacia"
+  },
+  {
+    "id": 72,
+    "name": "Daewoo",
+    "urlname": "daewoo"
+  },
+  {
+    "id": 126,
+    "name": "Dallara",
+    "urlname": "dallara"
+  },
+  {
+    "id": 224,
+    "name": "Deepal",
+    "urlname": "deepal"
+  },
+  {
+    "id": 135,
+    "name": "Deutz",
+    "urlname": "deutz"
+  },
+  {
+    "id": 42,
+    "name": "Dodge",
+    "urlname": "dodge"
+  },
+  {
+    "id": 130,
+    "name": "Donkervoort",
+    "urlname": "donkervoort"
+  },
+  {
+    "id": 134,
+    "name": "Fendt",
+    "urlname": "fendt"
+  },
+  {
+    "id": 84,
+    "name": "Ferrari",
+    "urlname": "ferrari"
+  },
+  {
+    "id": 7,
+    "name": "Fiat",
+    "urlname": "fiat"
+  },
+  {
+    "id": 19,
+    "name": "Ford",
+    "urlname": "ford"
+  },
+  {
+    "id": 128,
+    "name": "Freightliner",
+    "urlname": "freightliner"
+  },
+  {
+    "id": 227,
+    "name": "GAC",
+    "urlname": "gac"
+  },
+  {
+    "id": 88,
+    "name": "GMC",
+    "urlname": "gmc"
+  },
+  {
+    "id": 64,
+    "name": "GWM",
+    "urlname": "gwm"
+  },
+  {
+    "id": 119,
+    "name": "Geely",
+    "urlname": "geely"
+  },
+  {
+    "id": 124,
+    "name": "Genesis",
+    "urlname": "genesis"
+  },
+  {
+    "id": 141,
+    "name": "Hitachi",
+    "urlname": "hitachi"
+  },
+  {
+    "id": 89,
+    "name": "Holden",
+    "urlname": "holden"
+  },
+  {
+    "id": 21,
+    "name": "Honda",
+    "urlname": "honda"
+  },
+  {
+    "id": 219,
+    "name": "Hongqi",
+    "urlname": "hongqi"
+  },
+  {
+    "id": 90,
+    "name": "Hummer",
+    "urlname": "hummer"
+  },
+  {
+    "id": 20,
+    "name": "Hyundai",
+    "urlname": "hyundai"
+  },
+  {
+    "id": 229,
+    "name": "Ineos",
+    "urlname": "ineos"
+  },
+  {
+    "id": 53,
+    "name": "Infiniti",
+    "urlname": "infiniti"
+  },
+  {
+    "id": 51,
+    "name": "Isuzu",
+    "urlname": "isuzu"
+  },
+  {
+    "id": 33,
+    "name": "Iveco",
+    "urlname": "iveco"
+  },
+  {
+    "id": 142,
+    "name": "JCB",
+    "urlname": "jcb"
+  },
+  {
+    "id": 120,
+    "name": "Jac",
+    "urlname": "jac"
+  },
+  {
+    "id": 40,
+    "name": "Jaguar",
+    "urlname": "jaguar"
+  },
+  {
+    "id": 24,
+    "name": "Jeep",
+    "urlname": "jeep"
+  },
+  {
+    "id": 223,
+    "name": "Jetour",
+    "urlname": "jetour"
+  },
+  {
+    "id": 132,
+    "name": "John Deere",
+    "urlname": "john-deere"
+  },
+  {
+    "id": 23,
+    "name": "Kia",
+    "urlname": "kia"
+  },
+  {
+    "id": 143,
+    "name": "Krone",
+    "urlname": "krone"
+  },
+  {
+    "id": 85,
+    "name": "Lamborghini",
+    "urlname": "lamborghini"
+  },
+  {
+    "id": 144,
+    "name": "Lamborghini tractors",
+    "urlname": "lamborghini-tractors"
+  },
+  {
+    "id": 41,
+    "name": "Lancia",
+    "urlname": "lancia"
+  },
+  {
+    "id": 29,
+    "name": "Land Rover",
+    "urlname": "land-rover"
+  },
+  {
+    "id": 69,
+    "name": "Lexus",
+    "urlname": "lexus"
+  },
+  {
+    "id": 95,
+    "name": "Lincoln",
+    "urlname": "lincoln"
+  },
+  {
+    "id": 145,
+    "name": "Lindner",
+    "urlname": "lindner"
+  },
+  {
+    "id": 87,
+    "name": "Lotus",
+    "urlname": "lotus"
+  },
+  {
+    "id": 75,
+    "name": "Luxgen",
+    "urlname": "luxgen"
+  },
+  {
+    "id": 123,
+    "name": "Lynk & Co",
+    "urlname": "lynk-co"
+  },
+  {
+    "id": 230,
+    "name": "MAN LCV",
+    "urlname": "man-lcv"
+  },
+  {
+    "id": 55,
+    "name": "MAN Trucks",
+    "urlname": "man-trucks"
+  },
+  {
+    "id": 67,
+    "name": "MG",
+    "urlname": "mg"
+  },
+  {
+    "id": 99,
+    "name": "Mack",
+    "urlname": "mack"
+  },
+  {
+    "id": 68,
+    "name": "Mahindra",
+    "urlname": "mahindra"
+  },
+  {
+    "id": 62,
+    "name": "Maserati",
+    "urlname": "maserati"
+  },
+  {
+    "id": 136,
+    "name": "Massey Ferguson",
+    "urlname": "massey-ferguson"
+  },
+  {
+    "id": 46,
+    "name": "Mazda",
+    "urlname": "mazda"
+  },
+  {
+    "id": 146,
+    "name": "Mc Cormick",
+    "urlname": "mc-cormick"
+  },
+  {
+    "id": 86,
+    "name": "McLaren",
+    "urlname": "mclaren"
+  },
+  {
+    "id": 8,
+    "name": "Mercedes-Benz",
+    "urlname": "mercedes-benz"
+  },
+  {
+    "id": 56,
+    "name": "Mercedes-Benz Trucks",
+    "urlname": "mercedes-benz-trucks"
+  },
+  {
+    "id": 96,
+    "name": "Mercury",
+    "urlname": "mercury"
+  },
+  {
+    "id": 28,
+    "name": "Mini",
+    "urlname": "mini"
+  },
+  {
+    "id": 9,
+    "name": "Mitsubishi",
+    "urlname": "mitsubishi"
+  },
+  {
+    "id": 133,
+    "name": "New Holland",
+    "urlname": "new-holland"
+  },
+  {
+    "id": 26,
+    "name": "Nissan",
+    "urlname": "nissan"
+  },
+  {
+    "id": 91,
+    "name": "Oldsmobile",
+    "urlname": "oldsmobile"
+  },
+  {
+    "id": 16,
+    "name": "Opel",
+    "urlname": "opel"
+  },
+  {
+    "id": 10,
+    "name": "Peugeot",
+    "urlname": "peugeot"
+  },
+  {
+    "id": 92,
+    "name": "Pontiac",
+    "urlname": "pontiac"
+  },
+  {
+    "id": 11,
+    "name": "Porsche",
+    "urlname": "porsche"
+  },
+  {
+    "id": 200,
+    "name": "Proton",
+    "urlname": "proton"
+  },
+  {
+    "id": 12,
+    "name": "Renault",
+    "urlname": "renault"
+  },
+  {
+    "id": 32,
+    "name": "Renault Trucks",
+    "urlname": "renault-trucks"
+  },
+  {
+    "id": 73,
+    "name": "Roewe",
+    "urlname": "roewe"
+  },
+  {
+    "id": 121,
+    "name": "Rolls Royce",
+    "urlname": "rolls-royce"
+  },
+  {
+    "id": 52,
+    "name": "Rover",
+    "urlname": "rover"
+  },
+  {
+    "id": 27,
+    "name": "Saab",
+    "urlname": "saab"
+  },
+  {
+    "id": 114,
+    "name": "Same",
+    "urlname": "same"
+  },
+  {
+    "id": 93,
+    "name": "Saturn",
+    "urlname": "saturn"
+  },
+  {
+    "id": 35,
+    "name": "Scania Trucks",
+    "urlname": "scania-trucks"
+  },
+  {
+    "id": 13,
+    "name": "Seat",
+    "urlname": "seat"
+  },
+  {
+    "id": 14,
+    "name": "Skoda",
+    "urlname": "skoda"
+  },
+  {
+    "id": 45,
+    "name": "Smart",
+    "urlname": "smart"
+  },
+  {
+    "id": 44,
+    "name": "SsangYong",
+    "urlname": "ssangyong"
+  },
+  {
+    "id": 137,
+    "name": "Steyr",
+    "urlname": "steyr"
+  },
+  {
+    "id": 58,
+    "name": "Subaru",
+    "urlname": "subaru"
+  },
+  {
+    "id": 43,
+    "name": "Suzuki",
+    "urlname": "suzuki"
+  },
+  {
+    "id": 201,
+    "name": "Tata",
+    "urlname": "tata"
+  },
+  {
+    "id": 47,
+    "name": "Toyota",
+    "urlname": "toyota"
+  },
+  {
+    "id": 149,
+    "name": "Valtra",
+    "urlname": "valtra"
+  },
+  {
+    "id": 94,
+    "name": "Vauxhall",
+    "urlname": "vauxhall"
+  },
+  {
+    "id": 17,
+    "name": "Volkswagen",
+    "urlname": "volkswagen"
+  },
+  {
+    "id": 25,
+    "name": "Volvo",
+    "urlname": "volvo"
+  },
+  {
+    "id": 57,
+    "name": "Volvo Trucks",
+    "urlname": "volvo-trucks"
+  },
+  {
+    "id": 122,
+    "name": "WEY",
+    "urlname": "wey"
+  }
+]

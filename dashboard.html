@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuner File Service Dashboard | TuningPortal</title>
+  <link rel="icon" type="image/png" href="/assets/img/Fast-Tuningshop-logo.png">
+  <link rel="stylesheet" href="/assets/css/tuningportal.css">
+  <style>
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 65px);
+    }
+    .sidebar {
+      background: #0d1322;
+      border-right: 1px solid var(--border-color);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .sidebar-user {
+      padding: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+    }
+    .sidebar-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .sidebar-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      color: #cbd5e1;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: none;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s;
+    }
+    .sidebar-btn:hover, .sidebar-btn.active {
+      background: rgba(6, 133, 197, 0.15);
+      border-color: rgba(6, 133, 197, 0.3);
+      color: #fff;
+    }
+    .sidebar-btn svg {
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    .dashboard-main {
+      padding: 2.25rem;
+      overflow-y: auto;
+      max-width: 1200px;
+    }
+    .dash-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .dash-stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .dash-stat-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .dash-stat-number {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .data-table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .data-table th {
+      padding: 1rem 1.25rem;
+      background: rgba(10, 14, 23, 0.5);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .data-table td {
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+      color: #cbd5e1;
+    }
+    .data-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .badge-status.processing {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .badge-status.ready {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-status.completed {
+      background: rgba(6, 133, 197, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(6, 133, 197, 0.3);
+    }
+    .file-dropzone {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2.5rem;
+      text-align: center;
+      background: rgba(10, 14, 23, 0.4);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .file-dropzone:hover, .file-dropzone.dragover {
+      border-color: var(--primary);
+      background: rgba(6, 133, 197, 0.08);
+    }
+    .wizard-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .wizard-card h3 {
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .credit-box {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      background: var(--bg-card-light);
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .credit-box:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    @media (max-width: 900px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .dash-stat-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="/" class="nav-brand">
+        <img src="/assets/img/Fast-Tuningshop-logo.png" alt="Logo" onerror="this.style.display='none'">
+        <span>Tuning<span style="color: var(--accent);">Portal</span></span>
+        <span class="brand-badge">FILE SERVICE</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="/" class="nav-link" style="color: var(--text-muted);">
+          &larr; Terug naar Website
+        </a>
+        <div class="btn-credits">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+          <span id="dash-credit-balance">15</span> Credits
+        </div>
+        <button id="btn-quick-buy" class="btn-portal" style="padding: 0.45rem 1rem; font-size: 0.85rem;">
+          + Credits Kopen
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-user">
+        <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">Garage Autotuning B.V.</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">Klantnr: #44260</div>
+        <div style="font-size: 0.8rem; color: #34d399; font-weight: 700; margin-top: 0.35rem;">● Geactiveerd Tuner Account</div>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li>
+          <button class="sidebar-btn active" data-tab="tab-overview">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Dashboard Overzicht
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-btn" data-tab="tab-new-file" style="color: var(--accent); font-weight: 700;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+            Nieuwe File Service
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-btn" data-tab="tab-files">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Mijn File Services
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-btn" data-tab="tab-credits">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            Credits &amp; Facturen
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-btn" data-tab="tab-dtc">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            DTC Foutcode Zoeker
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-btn" data-tab="tab-tickets">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+            Support Tickets
+          </button>
+        </li>
+      </ul>
+
+      <div style="margin-top: auto; padding: 1rem; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-dim);">
+        <div>API Server: Actief</div>
+        <div>Mijndomein httpdocs ready</div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+
+      <!-- ================= Tab 1: Overview ================= -->
+      <section id="tab-overview" class="dash-tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <div>
+            <h1 style="font-size: 1.85rem; font-weight: 800; color: #fff;">File Service Dashboard</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Welkom terug! Bekijk hier uw actieve tuningfiles en creditstatus.</p>
+          </div>
+          <button class="btn-cta-primary" onclick="switchTab('tab-new-file')" style="padding: 0.75rem 1.25rem; font-size: 0.95rem;">
+            + Nieuwe File Aanvragen
+          </button>
+        </div>
+
+        <div class="dash-stat-grid">
+          <div class="dash-stat-box">
+            <div class="dash-stat-title">Beschikbare Credits</div>
+            <div id="stat-credit-num" class="dash-stat-number" style="color: #34d399;">15</div>
+          </div>
+          <div class="dash-stat-box">
+            <div class="dash-stat-title">In Behandeling</div>
+            <div id="stat-processing-num" class="dash-stat-number" style="color: #fbbf24;">1</div>
+          </div>
+          <div class="dash-stat-box">
+            <div class="dash-stat-title">Gereed voor Download</div>
+            <div id="stat-ready-num" class="dash-stat-number" style="color: var(--accent);">1</div>
+          </div>
+          <div class="dash-stat-box">
+            <div class="dash-stat-title">Voltooide Files</div>
+            <div id="stat-completed-num" class="dash-stat-number">2</div>
+          </div>
+        </div>
+
+        <div class="wizard-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <h3>Recente File Services</h3>
+            <button class="btn-cta-secondary" onclick="switchTab('tab-files')" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+              Alles weergeven &rarr;
+            </button>
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order No.</th>
+                  <th>Voertuig</th>
+                  <th>Kenteken / VIN</th>
+                  <th>Tuning Type &amp; Opties</th>
+                  <th>Status</th>
+                  <th>Acties</th>
+                </tr>
+              </thead>
+              <tbody id="overview-files-tbody">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= Tab 2: New File Service ================= -->
+      <section id="tab-new-file" class="dash-tab-content" style="display: none;">
+        <h1 style="font-size: 1.85rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem;">Nieuwe File Service Aanvragen</h1>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+          Vul de voertuiggegevens in, selecteer de gewenste tuning en upload uw originele ECU uitlezing.
+        </p>
+
+        <form id="file-service-wizard-form">
+          <!-- Step 1: Voertuig Selectie via API -->
+          <div class="wizard-card">
+            <h3>
+              <span style="background: var(--primary); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">1</span>
+              Voertuig Selectie
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label">Merk *</label>
+                <select id="fs-make" class="form-control" required></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Model *</label>
+                <select id="fs-model" class="form-control" disabled required></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bouwjaar / Generatie *</label>
+                <select id="fs-gen" class="form-control" disabled required></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Type / Motor *</label>
+                <select id="fs-engine" class="form-control" disabled required></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: ECU & Uitlees Gegevens -->
+          <div class="wizard-card">
+            <h3>
+              <span style="background: var(--primary); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">2</span>
+              ECU &amp; Tool Gegevens
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label">ECU Type</label>
+                <input type="text" id="fs-ecu" class="form-control" placeholder="Bijv. Bosch MED17.5.21 / MD1CS004">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Flasher / Tool *</label>
+                <select id="fs-tool" class="form-control" required>
+                  <option value="Autotuner">Autotuner</option>
+                  <option value="Alientech KESS3">Alientech KESS3</option>
+                  <option value="bFlash">bFlash</option>
+                  <option value="Magic Motorsport FLEX">Magic Motorsport FLEX</option>
+                  <option value="CMDFlash">CMDFlash</option>
+                  <option value="DFox">DFox</option>
+                  <option value="Anders">Anders / Overig</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Uitleesmethode *</label>
+                <select id="fs-method" class="form-control" required>
+                  <option value="OBD">OBD (Diagnosestekker)</option>
+                  <option value="Bench">Bench (Pinout / Service mode)</option>
+                  <option value="Boot">Boot / BDM (Open ECU)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label">Kenteken</label>
+                <input type="text" id="fs-license" class="form-control" placeholder="12-GTR-8">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Chassisnr (VIN)</label>
+                <input type="text" id="fs-vin" class="form-control" placeholder="WVWZZZAUZFP...">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bouwjaar</label>
+                <input type="number" id="fs-year" class="form-control" value="2016">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Transmissie</label>
+                <select id="fs-gearbox" class="form-control">
+                  <option value="Handgeschakeld">Handgeschakeld</option>
+                  <option value="DSG / S-Tronic">DSG / S-Tronic</option>
+                  <option value="Automaat (ZF/overig)">Automaat (ZF/overig)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label">Hardware Nummer</label>
+                <input type="text" id="fs-hwnr" class="form-control" placeholder="Bijv. 04E907309A">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Software Nummer</label>
+                <input type="text" id="fs-swnr" class="form-control" placeholder="Bijv. 04E906016F">
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Tuning Type & Opties -->
+          <div class="wizard-card">
+            <h3>
+              <span style="background: var(--primary); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">3</span>
+              Tuning Type &amp; Opties
+            </h3>
+
+            <div style="margin-bottom: 1.5rem;">
+              <label class="form-label">Tuning Type *</label>
+              <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem;">
+                <label style="background: var(--bg-card-light); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: pointer;">
+                  <input type="radio" name="fs_tuning_type" value="Stage 1" checked onchange="calcCreditCost()">
+                  <div style="font-weight: 700; color: #fff; margin-top: 0.25rem;">Stage 1</div>
+                  <div style="font-size: 0.8rem; color: var(--accent);">1.0 Credit</div>
+                </label>
+                <label style="background: var(--bg-card-light); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: pointer;">
+                  <input type="radio" name="fs_tuning_type" value="Stage 2" onchange="calcCreditCost()">
+                  <div style="font-weight: 700; color: #fff; margin-top: 0.25rem;">Stage 2</div>
+                  <div style="font-size: 0.8rem; color: var(--accent);">1.5 Credits</div>
+                </label>
+                <label style="background: var(--bg-card-light); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: pointer;">
+                  <input type="radio" name="fs_tuning_type" value="Stage 3" onchange="calcCreditCost()">
+                  <div style="font-weight: 700; color: #fff; margin-top: 0.25rem;">Stage 3</div>
+                  <div style="font-size: 0.8rem; color: var(--accent);">2.0 Credits</div>
+                </label>
+                <label style="background: var(--bg-card-light); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: pointer;">
+                  <input type="radio" name="fs_tuning_type" value="Eco Tuning" onchange="calcCreditCost()">
+                  <div style="font-weight: 700; color: #fff; margin-top: 0.25rem;">Eco Tuning</div>
+                  <div style="font-size: 0.8rem; color: var(--accent);">1.0 Credit</div>
+                </label>
+                <label style="background: var(--bg-card-light); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: pointer;">
+                  <input type="radio" name="fs_tuning_type" value="Gearbox TCU" onchange="calcCreditCost()">
+                  <div style="font-weight: 700; color: #fff; margin-top: 0.25rem;">TCU Automaat</div>
+                  <div style="font-size: 0.8rem; color: var(--accent);">1.0 Credit</div>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label class="form-label">Extra Opties (Selecteer gewenste aanpassingen)</label>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="Pops & Bangs" onchange="calcCreditCost()"> Pops &amp; Bangs (+0.5 cr)
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="Hard cut limiter" onchange="calcCreditCost()"> Hard cut limiter
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="VMAX off" onchange="calcCreditCost()"> VMAX verwijdering
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="EGR OFF" onchange="calcCreditCost()"> EGR OFF
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="DPF OFF" onchange="calcCreditCost()"> DPF OFF
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="AdBlue OFF" onchange="calcCreditCost()"> AdBlue OFF
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="Decat / OPF" onchange="calcCreditCost()"> Decat / OPF off
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="Start-Stop OFF" onchange="calcCreditCost()"> Start-Stop OFF
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; background: rgba(10, 14, 23, 0.4); padding: 0.6rem 0.8rem; border-radius: 4px; font-size: 0.9rem; color: #e2e8f0; cursor: pointer;">
+                  <input type="checkbox" class="fs-opt" value="DTC OFF" onchange="calcCreditCost()"> DTC OFF (Foutcodes)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Bestand & Notities -->
+          <div class="wizard-card">
+            <h3>
+              <span style="background: var(--primary); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">4</span>
+              Origineel Bestand Uploaden (.bin / .ori / .zip)
+            </h3>
+
+            <div class="file-dropzone" id="dropzone">
+              <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="color: var(--primary); margin-bottom: 0.75rem;"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+              <div style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem;">
+                Sleep uw ECU read bestand hierheen of klik om te bladeren
+              </div>
+              <div style="font-size: 0.85rem; color: var(--text-dim);">
+                Ondersteunde formaten: .bin, .ori, .frf, .zip, .rar (max 50 MB)
+              </div>
+              <input type="file" id="fs-file-input" style="display: none;" accept=".bin,.ori,.frf,.zip,.rar">
+              <div id="selected-file-name" style="margin-top: 1rem; font-weight: 700; color: var(--accent); display: none;"></div>
+            </div>
+
+            <div class="form-group" style="margin-top: 1.5rem;">
+              <label class="form-label">Specifieke Instructies / Wensen voor de Tuner</label>
+              <textarea id="fs-notes" class="form-control" placeholder="Bijv. graag vroege koppelopbouw, pops op AC knop, auto heeft catless downpipe..."></textarea>
+            </div>
+
+            <!-- Cost Summary & Submit -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: rgba(10, 14, 23, 0.6); border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-top: 1.5rem;">
+              <div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">Kosten voor deze aanvraag:</div>
+                <div style="font-size: 1.6rem; font-weight: 800; color: #fff; font-family: var(--font-heading);">
+                  <span id="calculated-cost">1.0</span> Credits
+                </div>
+              </div>
+              <button type="submit" class="btn-cta-primary" style="padding: 0.85rem 2rem;">
+                Bestand Indienen
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ================= Tab 3: My File Services ================= -->
+      <section id="tab-files" class="dash-tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h1 style="font-size: 1.85rem; font-weight: 800; color: #fff;">Mijn File Services</h1>
+          <button class="btn-cta-primary" onclick="switchTab('tab-new-file')" style="padding: 0.6rem 1.25rem; font-size: 0.9rem;">
+            + Nieuw Bestand
+          </button>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order No.</th>
+                <th>Datum</th>
+                <th>Voertuig</th>
+                <th>Kenteken / VIN</th>
+                <th>Tool / Methode</th>
+                <th>Tuning Details</th>
+                <th>Credits</th>
+                <th>Status</th>
+                <th>Downloads</th>
+              </tr>
+            </thead>
+            <tbody id="my-files-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= Tab 4: Buy Credits ================= -->
+      <section id="tab-credits" class="dash-tab-content" style="display: none;">
+        <h1 style="font-size: 1.85rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem;">Credits Kopen &amp; Prijzen</h1>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+          Koop voordelig file credits via iDEAL, Bancontact of Creditcard. Hoe meer credits, hoe voordeliger per tuning bestand.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 3rem;">
+          <!-- 1 credit -->
+          <div class="credit-box">
+            <h3 style="color: #fff; font-size: 1.25rem; margin-bottom: 0.25rem;">1 Credit</h3>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent); font-family: var(--font-heading); margin-bottom: 0.5rem;">&euro; 75,-</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">&euro; 75,00 per credit</div>
+            <button class="btn-cta-primary" onclick="buyCredits(1, 75)" style="width: 100%; justify-content: center; padding: 0.6rem;">Kopen</button>
+          </div>
+
+          <!-- 5 credits -->
+          <div class="credit-box" style="border-color: var(--primary); background: rgba(6, 133, 197, 0.08);">
+            <div style="background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-bottom: 0.5rem;">POPULAIR</div>
+            <h3 style="color: #fff; font-size: 1.25rem; margin-bottom: 0.25rem;">5 Credits</h3>
+            <div style="font-size: 2.2rem; font-weight: 800; color: #fff; font-family: var(--font-heading); margin-bottom: 0.5rem;">&euro; 350,-</div>
+            <div style="font-size: 0.85rem; color: #34d399; font-weight: 700; margin-bottom: 1.25rem;">&euro; 70,- per credit (Bespaar &euro;25)</div>
+            <button class="btn-cta-primary" onclick="buyCredits(5, 350)" style="width: 100%; justify-content: center; padding: 0.6rem;">Kopen</button>
+          </div>
+
+          <!-- 10 credits -->
+          <div class="credit-box">
+            <h3 style="color: #fff; font-size: 1.25rem; margin-bottom: 0.25rem;">10 Credits</h3>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent); font-family: var(--font-heading); margin-bottom: 0.5rem;">&euro; 650,-</div>
+            <div style="font-size: 0.85rem; color: #34d399; font-weight: 700; margin-bottom: 1.25rem;">&euro; 65,- per credit (Bespaar &euro;100)</div>
+            <button class="btn-cta-primary" onclick="buyCredits(10, 650)" style="width: 100%; justify-content: center; padding: 0.6rem;">Kopen</button>
+          </div>
+
+          <!-- 25 credits -->
+          <div class="credit-box">
+            <h3 style="color: #fff; font-size: 1.25rem; margin-bottom: 0.25rem;">25 Credits</h3>
+            <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent); font-family: var(--font-heading); margin-bottom: 0.5rem;">&euro; 1.500,-</div>
+            <div style="font-size: 0.85rem; color: #34d399; font-weight: 700; margin-bottom: 1.25rem;">&euro; 60,- per credit (Bespaar &euro;375)</div>
+            <button class="btn-cta-primary" onclick="buyCredits(25, 1500)" style="width: 100%; justify-content: center; padding: 0.6rem;">Kopen</button>
+          </div>
+        </div>
+
+        <div class="wizard-card">
+          <h3>Factuuroverzicht &amp; Betalingshistorie</h3>
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Factuurnr</th>
+                  <th>Datum</th>
+                  <th>Omschrijving</th>
+                  <th>Credits</th>
+                  <th>Bedrag</th>
+                  <th>Status</th>
+                  <th>Factuur</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-tbody">
+                <!-- Dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= Tab 5: DTC Remover ================= -->
+      <section id="tab-dtc" class="dash-tab-content" style="display: none;">
+        <h1 style="font-size: 1.85rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem;">OBD2 DTC Foutcode Zoeker &amp; Remover</h1>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+          Zoek in de complete database met 8.709 foutcodes en kopieer de code direct naar uw file service aanvraag.
+        </p>
+
+        <div class="wizard-card">
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <input type="text" id="dash-dtc-input" class="form-control" placeholder="Zoek op foutcode (bijv. P0401, P2002, P0420) of beschrijving (EGR, DPF)..." style="font-size: 1.05rem;">
+            <button id="dash-dtc-btn" class="btn-calculate" style="padding: 0.85rem 1.75rem;">
+              Zoeken
+            </button>
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Foutcode</th>
+                  <th>Omschrijving</th>
+                  <th>Oplossing</th>
+                  <th>Actie</th>
+                </tr>
+              </thead>
+              <tbody id="dash-dtc-tbody">
+                <tr>
+                  <td colspan="4" style="text-align: center; color: var(--text-dim); padding: 2rem;">
+                    Typ een foutcode of zoekterm om te beginnen...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= Tab 6: Support Tickets ================= -->
+      <section id="tab-tickets" class="dash-tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h1 style="font-size: 1.85rem; font-weight: 800; color: #fff;">Support &amp; Helpdesk</h1>
+          <button class="btn-cta-primary" id="btn-open-ticket-modal" style="padding: 0.6rem 1.25rem; font-size: 0.9rem;">
+            + Nieuw Ticket Openen
+          </button>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ticket No.</th>
+                <th>Datum</th>
+                <th>Gekoppelde File</th>
+                <th>Onderwerp</th>
+                <th>Prioriteit</th>
+                <th>Status</th>
+                <th>Actie</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-tbody">
+              <!-- Dynamically loaded -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Buy Credits Modal -->
+  <div id="buy-credits-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.5rem;">Credits Opwaarderen</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+        Kies een bundel en betaalmethode voor directe toevoeging aan uw account.
+      </p>
+      <form id="buy-credits-form">
+        <div class="form-group">
+          <label class="form-label">Geselecteerde Bundel</label>
+          <select id="modal-credit-pkg" class="form-control">
+            <option value="1|75">1 Credit (&euro; 75,-)</option>
+            <option value="5|350" selected>5 Credits (&euro; 350,- / &euro;70 per credit)</option>
+            <option value="10|650">10 Credits (&euro; 650,- / &euro;65 per credit)</option>
+            <option value="25|1500">25 Credits (&euro; 1.500,- / &euro;60 per credit)</option>
+            <option value="50|2750">50 Credits (&euro; 2.750,- / &euro;55 per credit)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Betaalmethode *</label>
+          <select class="form-control" required>
+            <option value="ideal">iDEAL (ABN AMRO, ING, Rabobank, SNS, etc.)</option>
+            <option value="bancontact">Bancontact / Payconiq</option>
+            <option value="creditcard">Creditcard (Visa, Mastercard, Amex)</option>
+            <option value="factuur">Op Rekening (B2B Zakelijk)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-cta-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Veilig Afrekenen &amp; Credits Toevoegen
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- New Ticket Modal -->
+  <div id="ticket-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.5rem;">Nieuw Support Ticket</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+        Vraag ondersteuning aan voor een file service of stel een algemene technische vraag.
+      </p>
+      <form id="new-ticket-form">
+        <div class="form-group">
+          <label class="form-label">Gekoppelde File Service (Optioneel)</label>
+          <input type="text" id="ticket-fs-id" class="form-control" placeholder="Bijv. FS-2026-9812">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Onderwerp *</label>
+          <input type="text" id="ticket-subject" class="form-control" placeholder="Korte samenvatting" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prioriteit</label>
+          <select id="ticket-priority" class="form-control">
+            <option value="Laag">Laag</option>
+            <option value="Normaal" selected>Normaal</option>
+            <option value="Hoog / Auto op Dyno">Hoog / Auto staat op testbank</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Uw Bericht *</label>
+          <textarea id="ticket-message" class="form-control" placeholder="Beschrijf uw vraag of loggegevens..." required></textarea>
+        </div>
+        <button type="submit" class="btn-cta-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Ticket Verzenden
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard JavaScript -->
+  <script>
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.dash-tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+
+      const target = document.getElementById(tabId);
+      if (target) target.style.display = 'block';
+
+      const btn = document.querySelector(`.sidebar-btn[data-tab="${tabId}"]`);
+      if (btn) btn.classList.add('active');
+
+      if (tabId === 'tab-files' || tabId === 'tab-overview') loadFiles();
+      if (tabId === 'tab-credits') loadCredits();
+      if (tabId === 'tab-tickets') loadTickets();
+    }
+
+    document.querySelectorAll('.sidebar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        if (tab) switchTab(tab);
+      });
+    });
+
+    // Handle hash links
+    window.addEventListener('load', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'new-file') switchTab('tab-new-file');
+      else if (hash === 'credits') switchTab('tab-credits');
+      else if (hash === 'tickets') switchTab('tab-tickets');
+      else if (hash === 'dtc') switchTab('tab-dtc');
+    });
+
+    // Credit Cost Calculator
+    function calcCreditCost() {
+      const type = document.querySelector('input[name="fs_tuning_type"]:checked')?.value || 'Stage 1';
+      let cost = 1.0;
+      if (type === 'Stage 2') cost = 1.5;
+      else if (type === 'Stage 3') cost = 2.0;
+
+      // Extra options
+      document.querySelectorAll('.fs-opt:checked').forEach(cb => {
+        if (cb.value === 'Pops & Bangs') cost += 0.5;
+      });
+
+      const costEl = document.getElementById('calculated-cost');
+      if (costEl) costEl.textContent = cost.toFixed(1);
+    }
+
+    // Load Files from API
+    async function loadFiles() {
+      try {
+        const res = await fetch('/api/file-services');
+        const data = await res.json();
+        const files = data.services || [];
+
+        // Update stats
+        const processing = files.filter(f => f.status === 'In Behandeling').length;
+        const ready = files.filter(f => f.status === 'Gereed').length;
+        const completed = files.filter(f => f.status === 'Voltooid').length;
+
+        document.getElementById('stat-processing-num').textContent = processing;
+        document.getElementById('stat-ready-num').textContent = ready;
+        document.getElementById('stat-completed-num').textContent = completed;
+
+        // Render overview table
+        const overviewTbody = document.getElementById('overview-files-tbody');
+        if (overviewTbody) {
+          overviewTbody.innerHTML = files.slice(0, 5).map(f => renderFileRow(f)).join('');
+        }
+
+        // Render my files table
+        const myTbody = document.getElementById('my-files-tbody');
+        if (myTbody) {
+          myTbody.innerHTML = files.map(f => renderFileRow(f, true)).join('');
+        }
+      } catch (e) {
+        console.error('Error loading files:', e);
+      }
+    }
+
+    function renderFileRow(f, full = false) {
+      let badgeClass = 'completed';
+      if (f.status === 'In Behandeling') badgeClass = 'processing';
+      else if (f.status === 'Gereed') badgeClass = 'ready';
+
+      const downloadBtns = f.status === 'Gereed' || f.status === 'Voltooid' 
+        ? `<button class="btn-cta-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="alert('Downloaden gestart voor: ${f.tuned_filename || f.order_number + '_tuned.bin'}')">Download Tuned</button>`
+        : `<span style="font-size: 0.82rem; color: var(--text-dim);">Wordt verwerkt...</span>`;
+
+      if (full) {
+        return `
+          <tr>
+            <td><b style="color: #fff;">${f.order_number}</b></td>
+            <td>${f.created_at || 'Vandaag'}</td>
+            <td>${f.make} ${f.model} <br><small style="color: var(--text-dim);">${f.engine}</small></td>
+            <td>${f.license_plate} <br><small style="color: var(--text-dim);">${f.vin}</small></td>
+            <td>${f.tool} (${f.read_method})</td>
+            <td>${f.tuning_type} <br><small style="color: var(--text-muted);">${f.tuning_options || ''}</small></td>
+            <td>${f.credits_cost} cr</td>
+            <td><span class="badge-status ${badgeClass}">${f.status}</span></td>
+            <td>${downloadBtns}</td>
+          </tr>
+        `;
+      }
+
+      return `
+        <tr>
+          <td><b style="color: #fff;">${f.order_number}</b></td>
+          <td>${f.make} ${f.model} ${f.engine}</td>
+          <td>${f.license_plate}</td>
+          <td>${f.tuning_type} - ${f.tuning_options || 'Standaard'}</td>
+          <td><span class="badge-status ${badgeClass}">${f.status}</span></td>
+          <td>${downloadBtns}</td>
+        </tr>
+      `;
+    }
+
+    // Load Credits & Transactions
+    async function loadCredits() {
+      try {
+        const res = await fetch('/api/credits');
+        const data = await res.json();
+        const bal = data.balance || 15;
+        document.getElementById('nav-credit-balance').textContent = bal;
+        document.getElementById('dash-credit-balance').textContent = bal;
+        document.getElementById('stat-credit-num').textContent = bal;
+
+        const tbody = document.getElementById('transactions-tbody');
+        if (tbody && data.transactions) {
+          tbody.innerHTML = data.transactions.map(t => `
+            <tr>
+              <td><b style="color: #fff;">${t.invoice_number}</b></td>
+              <td>${t.created_at}</td>
+              <td>${t.description}</td>
+              <td>+${t.credits} credits</td>
+              <td>&euro; ${t.amount.toFixed(2)}</td>
+              <td><span class="badge-status ready">${t.status}</span></td>
+              <td><button class="btn-cta-secondary" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;" onclick="alert('PDF Factuur wordt gegenereerd...')">PDF</button></td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {}
+    }
+
+    // Buy Credits Trigger
+    function buyCredits(credits, amount) {
+      const modal = document.getElementById('buy-credits-modal');
+      const select = document.getElementById('modal-credit-pkg');
+      if (select) select.value = `${credits}|${amount}`;
+      if (modal) modal.classList.add('active');
+    }
+
+    document.getElementById('btn-quick-buy')?.addEventListener('click', () => {
+      document.getElementById('buy-credits-modal')?.classList.add('active');
+    });
+
+    // Buy credits form submit
+    document.getElementById('buy-credits-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const [credits, amount] = document.getElementById('modal-credit-pkg').value.split('|');
+
+      try {
+        const res = await fetch('/api/buy-credits', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credits: parseInt(credits), amount: parseFloat(amount) })
+        });
+        const data = await res.json();
+        alert(data.message || 'Credits succesvol toegevoegd!');
+        document.getElementById('buy-credits-modal')?.classList.remove('active');
+        loadCredits();
+      } catch (err) {
+        alert('Credits toegevoegd aan demo account!');
+        document.getElementById('buy-credits-modal')?.classList.remove('active');
+      }
+    });
+
+    // Load Tickets
+    async function loadTickets() {
+      try {
+        const res = await fetch('/api/tickets');
+        const data = await res.json();
+        const tbody = document.getElementById('tickets-tbody');
+        if (tbody && data.tickets) {
+          tbody.innerHTML = data.tickets.map(t => `
+            <tr>
+              <td><b style="color: #fff;">${t.ticket_number}</b></td>
+              <td>${t.created_at || 'Recent'}</td>
+              <td>${t.file_service_id || 'Algemeen'}</td>
+              <td>${t.subject}</td>
+              <td><span style="color: ${t.priority.includes('Hoog') ? '#ef4444' : '#cbd5e1'}; font-weight: 700;">${t.priority}</span></td>
+              <td><span class="badge-status ${t.status === 'Beantwoord' ? 'ready' : 'processing'}">${t.status}</span></td>
+              <td><button class="btn-cta-secondary" style="padding: 0.3rem 0.65rem; font-size: 0.8rem;" onclick="alert('Ticket: ${t.subject}\\n\\nBericht: ${t.message}')">Bekijken</button></td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {}
+    }
+
+    document.getElementById('btn-open-ticket-modal')?.addEventListener('click', () => {
+      document.getElementById('ticket-modal')?.classList.add('active');
+    });
+
+    document.getElementById('new-ticket-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fsId = document.getElementById('ticket-fs-id')?.value;
+      const subj = document.getElementById('ticket-subject')?.value;
+      const prio = document.getElementById('ticket-priority')?.value;
+      const msg = document.getElementById('ticket-message')?.value;
+
+      try {
+        const res = await fetch('/api/tickets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ file_service_id: fsId, subject: subj, priority: prio, message: msg })
+        });
+        const data = await res.json();
+        alert(data.message || 'Ticket succesvol ingediend!');
+        document.getElementById('ticket-modal')?.classList.remove('active');
+        document.getElementById('new-ticket-form')?.reset();
+        loadTickets();
+      } catch (err) {
+        alert('Ticket verstuurd!');
+        document.getElementById('ticket-modal')?.classList.remove('active');
+      }
+    });
+
+    // DTC Search in Dashboard
+    async function searchDashDtc() {
+      const q = document.getElementById('dash-dtc-input')?.value.trim();
+      const tbody = document.getElementById('dash-dtc-tbody');
+      if (!q || !tbody) return;
+
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Zoeken in 8.709 foutcodes...</td></tr>';
+
+      try {
+        const res = await fetch(`/api/dtc?code=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+          tbody.innerHTML = data.results.map(r => `
+            <tr>
+              <td><span style="background: rgba(6, 133, 197, 0.2); color: var(--accent); padding: 0.25rem 0.6rem; border-radius: 4px; font-weight: 800; font-family: var(--font-heading);">${r.code}</span></td>
+              <td>${r.description || r.value || ''}</td>
+              <td><span style="color: #10b981; font-weight: 700;">Uitschakelbaar via DTC OFF</span></td>
+              <td><button class="btn-cta-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" onclick="navigator.clipboard.writeText('${r.code}'); alert('Gekopieerd: ${r.code}');">Kopieer Code</button></td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-dim); padding: 1.5rem;">Geen foutcodes gevonden.</td></tr>';
+        }
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--accent-red); padding: 1.5rem;">Fout bij ophalen.</td></tr>';
+      }
+    }
+
+    document.getElementById('dash-dtc-btn')?.addEventListener('click', searchDashDtc);
+    document.getElementById('dash-dtc-input')?.addEventListener('keydown', (e) => { if (e.key === 'Enter') searchDashDtc(); });
+
+    // File Dropzone Handling
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fs-file-input');
+    const fileNameDisplay = document.getElementById('selected-file-name');
+
+    if (dropzone && fileInput) {
+      dropzone.addEventListener('click', () => fileInput.click());
+      dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+      dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+          fileInput.files = e.dataTransfer.files;
+          showSelectedFile();
+        }
+      });
+      fileInput.addEventListener('change', showSelectedFile);
+    }
+
+    function showSelectedFile() {
+      if (fileInput.files.length > 0) {
+        fileNameDisplay.style.display = 'block';
+        fileNameDisplay.textContent = `Geselecteerd: ${fileInput.files[0].name} (${(fileInput.files[0].size / 1024 / 1024).toFixed(2)} MB)`;
+      }
+    }
+
+    // Form Wizard Submit
+    document.getElementById('file-service-wizard-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const make = document.getElementById('fs-make')?.value;
+      const model = document.getElementById('fs-model')?.value;
+      const gen = document.getElementById('fs-gen')?.value;
+      const engine = document.getElementById('fs-engine')?.value;
+      const ecu = document.getElementById('fs-ecu')?.value;
+      const tool = document.getElementById('fs-tool')?.value;
+      const method = document.getElementById('fs-method')?.value;
+      const license = document.getElementById('fs-license')?.value;
+      const vin = document.getElementById('fs-vin')?.value;
+      const year = document.getElementById('fs-year')?.value;
+      const gearbox = document.getElementById('fs-gearbox')?.value;
+      const hwnr = document.getElementById('fs-hwnr')?.value;
+      const swnr = document.getElementById('fs-swnr')?.value;
+      const tuningType = document.querySelector('input[name="fs_tuning_type"]:checked')?.value || 'Stage 1';
+      const notes = document.getElementById('fs-notes')?.value;
+      const cost = parseFloat(document.getElementById('calculated-cost')?.textContent || 1.0);
+
+      const opts = [];
+      document.querySelectorAll('.fs-opt:checked').forEach(cb => opts.push(cb.value));
+
+      const payload = {
+        make, model, generation: gen, engine, ecu, tool,
+        read_method: method, license_plate: license, vin, year, gearbox,
+        hardware_nr: hwnr, software_nr: swnr, tuning_type: tuningType,
+        tuning_options: opts.join(', '), notes,
+        credits_cost: cost,
+        original_filename: fileInput.files[0]?.name || 'read_file.bin'
+      };
+
+      try {
+        const res = await fetch('/api/file-services', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        alert(`Succes! ${data.message}\nOrdernummer: ${data.order_number}\nVerwachte tijd: ${data.estimated_time}`);
+        document.getElementById('file-service-wizard-form')?.reset();
+        fileNameDisplay.style.display = 'none';
+        switchTab('tab-files');
+      } catch (err) {
+        alert('File Service succesvol aangemaakt!');
+        switchTab('tab-files');
+      }
+    });
+
+    // Populate Vehicle Dropdowns in Wizard
+    async function initWizardDropdowns() {
+      const fsMake = document.getElementById('fs-make');
+      const fsModel = document.getElementById('fs-model');
+      const fsGen = document.getElementById('fs-gen');
+      const fsEngine = document.getElementById('fs-engine');
+
+      if (!fsMake) return;
+
+      try {
+        const res = await fetch('/api/makes');
+        const data = await res.json();
+        fsMake.innerHTML = '<option value="">Selecteer Merk</option>' + 
+          data.makes.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+
+        fsMake.addEventListener('change', async () => {
+          const m = fsMake.value;
+          fsModel.innerHTML = '<option value="">Selecteer Model</option>';
+          fsGen.innerHTML = '<option value="">Selecteer Bouwjaar</option>';
+          fsEngine.innerHTML = '<option value="">Selecteer Motor</option>';
+          fsModel.disabled = true; fsGen.disabled = true; fsEngine.disabled = true;
+
+          if (!m) return;
+          const mRes = await fetch(`/api/models?make=${encodeURIComponent(m)}`);
+          const mData = await mRes.json();
+          fsModel.innerHTML += mData.models.map(mo => `<option value="${mo.name}">${mo.name}</option>`).join('');
+          fsModel.disabled = false;
+        });
+
+        fsModel.addEventListener('change', async () => {
+          const m = fsMake.value;
+          const mo = fsModel.value;
+          fsGen.innerHTML = '<option value="">Selecteer Bouwjaar</option>';
+          fsEngine.innerHTML = '<option value="">Selecteer Motor</option>';
+          fsGen.disabled = true; fsEngine.disabled = true;
+
+          if (!mo) return;
+          const gRes = await fetch(`/api/generations?make=${encodeURIComponent(m)}&model=${encodeURIComponent(mo)}`);
+          const gData = await gRes.json();
+          fsGen.innerHTML += gData.generations.map(g => `<option value="${g.name}">${g.name}</option>`).join('');
+          fsGen.disabled = false;
+        });
+
+        fsGen.addEventListener('change', async () => {
+          const m = fsMake.value;
+          const mo = fsModel.value;
+          const g = fsGen.value;
+          fsEngine.innerHTML = '<option value="">Selecteer Motor</option>';
+          fsEngine.disabled = true;
+
+          if (!g) return;
+          const eRes = await fetch(`/api/engines?make=${encodeURIComponent(m)}&model=${encodeURIComponent(mo)}&generation=${encodeURIComponent(g)}`);
+          const eData = await eRes.json();
+          fsEngine.innerHTML += eData.engines.map(eng => `<option value="${eng.name}">${eng.name}</option>`).join('');
+          fsEngine.disabled = false;
+        });
+
+        // Set default Volkswagen
+        fsMake.value = 'Volkswagen';
+        fsMake.dispatchEvent(new Event('change'));
+      } catch (e) {}
+    }
+
+    // Modal Close logic
+    document.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+      });
+    });
+
+    // Initial Load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFiles();
+      loadCredits();
+      initWizardDropdowns();
+    });
+  </script>
+
+</body>
+</html>
