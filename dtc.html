@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OBD2 DTC Foutcode Database (8.709 Codes) &amp; DTC OFF | TuningPortal</title>
+  <meta name="description" content="Zoek in de complete database van 8.709 OBD-II storingscodes (P, C, B, U codes). Vind direct betekenis, oorzaak en laat de foutcode permanent uitschakelen in de ECU software via DTC OFF.">
+  <link rel="icon" type="image/png" href="/assets/img/Fast-Tuningshop-logo.png">
+  <link rel="stylesheet" href="/assets/css/tuningportal.css">
+  <style>
+    .dtc-hero {
+      background: linear-gradient(180deg, rgba(13, 19, 34, 0.95) 0%, rgba(10, 14, 23, 1) 100%);
+      padding: 4rem 1rem 2.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .dtc-hero h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .dtc-hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 2rem;
+    }
+    .dtc-search-bar {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.75rem;
+      background: var(--bg-card);
+      padding: 0.5rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .dtc-search-bar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+    }
+    .dtc-category-pills {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .dtc-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .dtc-pill:hover, .dtc-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .dtc-table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      margin: 3rem 0;
+    }
+    .dtc-code-badge {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--accent);
+      background: rgba(6, 133, 197, 0.15);
+      border: 1px solid rgba(6, 133, 197, 0.3);
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-sm);
+    }
+    .dtc-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 3.5rem 0;
+    }
+    .dtc-info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+    }
+    .dtc-info-card h3 {
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    @media (max-width: 900px) {
+      .dtc-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="/" class="nav-brand">
+        <img src="/assets/img/Fast-Tuningshop-logo.png" alt="Logo" onerror="this.style.display='none'">
+        <span>Tuning<span style="color: var(--accent);">Portal</span></span>
+        <span class="brand-badge">DIAGNOSTIEK</span>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/iframe.html" class="nav-link">Voertuig Kiezer</a>
+        <a href="/tools.html" class="nav-link">Slave Tools</a>
+        <a href="/dtc.html" class="nav-link active">DTC Foutcodes</a>
+        <a href="/dashboard.html" class="nav-link">File Service Portal</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="btn-credits">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+          <span id="nav-credit-balance">15</span> Credits
+        </div>
+        <a href="/dashboard.html#credits" class="btn-portal">Credits Kopen</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="dtc-hero">
+    <div class="container">
+      <span style="display: inline-block; padding: 0.25rem 0.65rem; font-size: 0.75rem; font-weight: 700; color: var(--accent); background: rgba(6, 133, 197, 0.12); border: 1px solid rgba(6, 133, 197, 0.3); border-radius: 9999px; margin-bottom: 0.75rem; text-transform: uppercase;">
+        8.709 Geverifieerde OBD-II Foutcodes
+      </span>
+      <h1>OBD2 DTC Foutcode Zoeker &amp; DTC OFF</h1>
+      <p>
+        Heeft u een storingslampje (MIL / Check Engine) of foutcode na een aanpassing zoals decat, downpipe of EGR afdichting? Zoek hier de officiële betekenis op en laat de foutcode permanent en storingsvrij uitschakelen in de software.
+      </p>
+
+      <div class="dtc-search-bar">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--text-muted); margin-left: 0.5rem; align-self: center;"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" id="dtc-query-input" placeholder="Zoek op foutcode (bijv. P0401, P0420, P2002) of omschrijving (EGR, Katalysator, Turbo)..." autocomplete="off">
+        <button id="dtc-search-submit" class="btn-cta-primary" style="padding: 0.75rem 1.75rem; border-radius: var(--radius-sm);">
+          Zoeken
+        </button>
+      </div>
+
+      <div class="dtc-category-pills">
+        <button class="dtc-pill active" data-cat="all">Alle Codes (8.709)</button>
+        <button class="dtc-pill" data-cat="P">P - Aandrijflijn / Motor (P0xxx / P1xxx)</button>
+        <button class="dtc-pill" data-cat="C">C - Onderstel &amp; Remsysteem (C0xxx)</button>
+        <button class="dtc-pill" data-cat="B">B - Carrosserie &amp; Airbag (B0xxx)</button>
+        <button class="dtc-pill" data-cat="U">U - Netwerk &amp; CAN-Bus (U0xxx)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DTC Table Section -->
+  <section class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
+      <div id="results-count" style="color: var(--text-muted); font-size: 0.95rem;">
+        Toont eerste resultaten van 8.709 codes...
+      </div>
+      <div>
+        <span style="font-size: 0.85rem; color: #10b981; font-weight: 700;">
+          ✓ Alle getoonde codes kunnen 100% schadevrij worden gewist via TuningPortal DTC OFF
+        </span>
+      </div>
+    </div>
+
+    <div class="dtc-table-container">
+      <table class="data-table" id="dtc-results-table">
+        <thead>
+          <tr>
+            <th style="width: 140px;">Foutcode</th>
+            <th>Officiële OBD2 Omschrijving</th>
+            <th>Type Systeem</th>
+            <th style="width: 220px;">DTC OFF Beschikbaar</th>
+            <th style="width: 180px;">Actie</th>
+          </tr>
+        </thead>
+        <tbody id="dtc-table-body">
+          <!-- Loaded via JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Info Cards: Wat is DTC OFF? -->
+    <div class="dtc-info-grid">
+      <div class="dtc-info-card">
+        <h3>
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--accent);"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          Wat is DTC OFF?
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+          DTC OFF (Diagnostic Trouble Code Deactivatie) is het gericht uitschakelen van specifieke foutcode tabellen in de motorcomputer (ECU). Hierdoor gaat er bij die specifieke sensor of klep geen storingslampje meer branden en treedt de noodloop (limp mode) niet meer in werking.
+        </p>
+      </div>
+
+      <div class="dtc-info-card">
+        <h3>
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #10b981;"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Wanneer wordt dit toegepast?
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+          DTC OFF is ideaal bij mechanische modificaties: decat sportuitlaten (katalysator foutcodes P0420), defecte EGR kleppen (P0401/P0402), wervelkleppen / swirl flaps (P2015), of AdBlue/NOx sensor storingen die extreem kostbaar zijn om te vervangen.
+        </p>
+      </div>
+
+      <div class="dtc-info-card">
+        <h3>
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--primary);"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Direct Aanvragen
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+          Heeft u een auto in de werkplaats staan met een specifieke foutcode? Upload het ECU bestand direct via ons file portaal en vink "DTC OFF" aan met vermelding van de gewenste code. Binnen 20 minuten heeft u de aangepaste file retour!
+        </p>
+        <a href="/dashboard.html#new-file" class="btn-cta-primary" style="margin-top: 1rem; width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.5rem;">
+          Naar File Portal &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detail Modal -->
+  <div id="dtc-detail-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+        <span id="modal-dtc-code" class="dtc-code-badge" style="font-size: 1.5rem;">P0401</span>
+        <h2 id="modal-dtc-title" style="color: #fff; font-size: 1.25rem; margin: 0;">Uitlaatgasrecirculatie onvoldoende doorstroming</h2>
+      </div>
+
+      <div style="background: rgba(10, 14, 23, 0.6); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Systeem</div>
+        <div id="modal-dtc-system" style="color: #cbd5e1; font-weight: 600; margin-bottom: 1rem;">Aandrijflijn (Powertrain) / Emissie</div>
+
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Mogelijke Oorzaken</div>
+        <div id="modal-dtc-cause" style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 1rem;">
+          Vervuilde of vastzittende EGR klep, verstopte EGR koeler leidingen, defecte verschildruksensor of vacuümlekkage.
+        </div>
+
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Tuning Oplossing</div>
+        <div style="color: #34d399; font-weight: 600; font-size: 0.95rem;">
+          ✓ Deze code kan 100% worden verwijderd via onze "EGR OFF + DTC OFF" kalibratie zonder dat het motormanagementlampje gaat branden.
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <button class="btn-cta-secondary" style="flex: 1; justify-content: center;" onclick="copyCodeFromModal()">
+          Kopieer Foutcode
+        </button>
+        <a id="modal-dtc-order-btn" href="/dashboard.html#new-file" class="btn-cta-primary" style="flex: 1; justify-content: center;">
+          File Service Aanvragen
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-bottom">
+      <p>&copy; 2026 TuningPortal. Alle rechten voorbehouden. DTC Diagnostiek Database.</p>
+    </div>
+  </footer>
+
+  <script>
+    let activeFilter = 'all';
+    let currentModalCode = '';
+
+    async function fetchDtcs(query = '') {
+      const tbody = document.getElementById('dtc-table-body');
+      const countEl = document.getElementById('results-count');
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Laden van foutcodes...</td></tr>';
+
+      try {
+        let url = `/api/dtc?code=${encodeURIComponent(query)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        let items = data.results || [];
+
+        // Apply category filter if active
+        if (activeFilter !== 'all') {
+          items = items.filter(i => (i.code || '').toUpperCase().startsWith(activeFilter));
+        }
+
+        countEl.textContent = `Gevonden: ${items.length} foutcodes ${query ? `voor "${query}"` : '(toont eerste 100)'}`;
+
+        if (items.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-dim); padding: 2rem;">Geen overeenkomende storingscodes gevonden.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = items.map(c => {
+          const desc = c.description || c.value || '';
+          const code = c.code || '';
+          let catName = 'Aandrijflijn (P)';
+          if (code.startsWith('C')) catName = 'Onderstel / ABS (C)';
+          else if (code.startsWith('B')) catName = 'Carrosserie / Airbag (B)';
+          else if (code.startsWith('U')) catName = 'Netwerk / CAN-bus (U)';
+
+          return `
+            <tr>
+              <td><span class="dtc-code-badge">${code}</span></td>
+              <td style="color: #e2e8f0; font-weight: 500;">${desc}</td>
+              <td style="color: var(--text-muted); font-size: 0.9rem;">${catName}</td>
+              <td>
+                <span style="color: #10b981; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 0.25rem;">
+                  <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                  100% Ondersteund
+                </span>
+              </td>
+              <td>
+                <button class="btn-cta-secondary" style="padding: 0.35rem 0.75rem; font-size: 0.82rem;" onclick="showDtcDetail('${code}', '${desc.replace(/'/g, "\\'")}', '${catName}')">
+                  Details &amp; Oplossing
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--accent-red); padding: 2rem;">Fout bij ophalen van data.</td></tr>';
+      }
+    }
+
+    function showDtcDetail(code, desc, cat) {
+      currentModalCode = code;
+      document.getElementById('modal-dtc-code').textContent = code;
+      document.getElementById('modal-dtc-title').textContent = desc;
+      document.getElementById('modal-dtc-system').textContent = cat;
+
+      let cause = 'Mogelijke sensorafwijking, kabelbreuk of mechanisch defect in het betreffende deelsysteem.';
+      if (code.includes('0401') || code.includes('0402')) {
+        cause = 'Vervuilde of vastzittende EGR klep, verstopte leidingen of defecte stappenmotor.';
+      } else if (code.includes('0420') || code.includes('0430')) {
+        cause = 'Katalysator werking onder drempelwaarde (vaak na montage van sportuitlaat of downpipe zonder cat).';
+      } else if (code.includes('2002') || code.includes('2463')) {
+        cause = 'Roetfilter (DPF) verzadiging of te hoge tegendruk/roetbelasting.';
+      }
+      document.getElementById('modal-dtc-cause').textContent = cause;
+
+      document.getElementById('dtc-detail-modal').classList.add('active');
+    }
+
+    function copyCodeFromModal() {
+      if (currentModalCode) {
+        navigator.clipboard.writeText(currentModalCode);
+        alert(`Foutcode ${currentModalCode} gekopieerd naar klembord! U kunt deze nu plakken in het dashboard.`);
+      }
+    }
+
+    // Modal Close
+    document.querySelectorAll('.modal-close').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+      });
+    });
+
+    // Pill Filter Switching
+    document.querySelectorAll('.dtc-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.dtc-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.getAttribute('data-cat');
+        const q = document.getElementById('dtc-query-input')?.value.trim();
+        fetchDtcs(q);
+      });
+    });
+
+    // Search events
+    document.getElementById('dtc-search-submit')?.addEventListener('click', () => {
+      const q = document.getElementById('dtc-query-input')?.value.trim();
+      fetchDtcs(q);
+    });
+
+    document.getElementById('dtc-query-input')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const q = document.getElementById('dtc-query-input')?.value.trim();
+        fetchDtcs(q);
+      }
+    });
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchDtcs('P04');
+    });
+  </script>
+</body>
+</html>

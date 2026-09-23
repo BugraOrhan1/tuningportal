@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiptuning Slave Tools &amp; Flasher Hardware | TuningPortal</title>
+  <meta name="description" content="Bestel officiële Slave chiptuning tools gekoppeld aan de TuningPortal master. Autotuner, Alientech KESS3, bFlash, Flex en CMDFlash met gratis credits en support.">
+  <link rel="icon" type="image/png" href="/assets/img/Fast-Tuningshop-logo.png">
+  <link rel="stylesheet" href="/assets/css/tuningportal.css">
+  <style>
+    .tools-hero {
+      background: linear-gradient(180deg, rgba(13, 19, 34, 0.95) 0%, rgba(10, 14, 23, 1) 100%);
+      padding: 4.5rem 1rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .tools-hero h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .tools-hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 2rem;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin: 3.5rem 0;
+    }
+    .tool-product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s;
+    }
+    .tool-product-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(6, 133, 197, 0.15);
+    }
+    .tool-card-img {
+      height: 220px;
+      background: radial-gradient(circle, rgba(6, 133, 197, 0.08) 0%, rgba(10, 14, 23, 0.6) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .tool-card-img img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+    }
+    .tool-card-body {
+      padding: 1.75rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .tool-badge-pill {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(6, 133, 197, 0.12);
+      border: 1px solid rgba(6, 133, 197, 0.3);
+      border-radius: 9999px;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+    }
+    .tool-card-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .tool-price {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .tool-price small {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .tool-features {
+      list-style: none;
+      margin-bottom: 1.5rem;
+      flex: 1;
+    }
+    .tool-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      margin-bottom: 0.65rem;
+    }
+    .tool-features svg {
+      color: #10b981;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .comparison-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2.5rem;
+      margin: 4rem 0;
+    }
+    @media (max-width: 1024px) {
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 768px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="/" class="nav-brand">
+        <img src="/assets/img/Fast-Tuningshop-logo.png" alt="Logo" onerror="this.style.display='none'">
+        <span>Tuning<span style="color: var(--accent);">Portal</span></span>
+        <span class="brand-badge">HARDWARE</span>
+      </a>
+
+      <nav class="nav-menu">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/iframe.html" class="nav-link">Voertuig Kiezer</a>
+        <a href="/tools.html" class="nav-link active">Slave Tools</a>
+        <a href="/dtc.html" class="nav-link">DTC Foutcodes</a>
+        <a href="/dashboard.html" class="nav-link">File Service Portal</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="btn-credits">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+          <span id="nav-credit-balance">15</span> Credits
+        </div>
+        <a href="/dashboard.html#credits" class="btn-portal">Credits Kopen</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="tools-hero">
+    <div class="container">
+      <span class="tool-badge-pill">Officiële Hardware Distributeur</span>
+      <h1>Chiptuning Flasher Tools &amp; Hardware</h1>
+      <p>
+        Wilt u als garage of autobedrijf zelf professioneel chiptuning aanbieden? Kies voor een officiële Slave flasher gekoppeld aan de TuningPortal Master. Inclusief 5 gratis tuning credits, training en continue WhatsApp file support!
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="#catalog" class="btn-cta-primary" style="padding: 0.85rem 2rem;">Bekijk Beschikbare Tools &darr;</a>
+        <a href="#why-slave" class="btn-cta-secondary" style="padding: 0.85rem 2rem;">Hoe werkt een Slave tool?</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Catalog Grid -->
+  <section id="catalog" class="container">
+    <div class="tools-grid">
+
+      <!-- 1. Autotuner -->
+      <div class="tool-product-card">
+        <div class="tool-card-img">
+          <img src="/assets/img/autotuner.png" alt="Autotuner Flasher Tool">
+        </div>
+        <div class="tool-card-body">
+          <span class="tool-badge-pill">Geen Jaarabonnement</span>
+          <h2 class="tool-card-title">Autotuner Slave</h2>
+          <div class="tool-price">&euro; 2.900,- <small>excl. BTW</small></div>
+          <ul class="tool-features">
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> OBD, Bench &amp; Boot protocollen inbegrepen</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> <b>Levenslang gratis updates</b> (géén licentiekosten)</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Ultrasnelle leestijd (Bosch MG1/MD1 < 3 min)</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Inclusief 5 gratis tuning credits (t.w.v. &euro;350,-)</li>
+          </ul>
+          <button class="btn-cta-primary" onclick="openToolOrder('Autotuner Slave', 2900)" style="width: 100%; justify-content: center; margin-top: auto;">
+            Bestellen / Aanvragen
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Alientech KESS3 -->
+      <div class="tool-product-card">
+        <div class="tool-card-img">
+          <img src="/assets/img/kess3.png" alt="Alientech KESS3">
+        </div>
+        <div class="tool-card-body">
+          <span class="tool-badge-pill" style="color: #fbbf24; border-color: rgba(251, 191, 36, 0.4);">Meest Gekozen</span>
+          <h2 class="tool-card-title">Alientech KESS3 Slave</h2>
+          <div class="tool-price">&euro; 1.490,- <small>excl. BTW + protocollen</small></div>
+          <ul class="tool-features">
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Combineert KESSv2 &amp; K-TAG in één behuizing</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Keuze uit OBD / Bench / Boot activaties</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Alsuite software met duidelijke aansluitschema's</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Inclusief 5 gratis tuning credits</li>
+          </ul>
+          <button class="btn-cta-primary" onclick="openToolOrder('Alientech KESS3 Slave', 1490)" style="width: 100%; justify-content: center; margin-top: auto;">
+            Bestellen / Aanvragen
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. bFlash -->
+      <div class="tool-product-card">
+        <div class="tool-card-img">
+          <img src="/assets/img/bflash.png" alt="bFlash Slave">
+        </div>
+        <div class="tool-card-body">
+          <span class="tool-badge-pill">High-End Tuning</span>
+          <h2 class="tool-card-title">bFlash Slave</h2>
+          <div class="tool-price">&euro; 2.500,- <small>excl. BTW</small></div>
+          <ul class="tool-features">
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Dé referentie voor BMW, VAG &amp; Mercedes</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Geïntegreerde high-speed datalogger &amp; dyno app</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Zeer stabiele CAN-bus &amp; FlexRay communicatie</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Inclusief 5 gratis tuning credits</li>
+          </ul>
+          <button class="btn-cta-primary" onclick="openToolOrder('bFlash Slave', 2500)" style="width: 100%; justify-content: center; margin-top: auto;">
+            Bestellen / Aanvragen
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. Magic Motorsport FLEX -->
+      <div class="tool-product-card">
+        <div class="tool-card-img">
+          <img src="/assets/img/flex.png" alt="Magic Motorsport FLEX">
+        </div>
+        <div class="tool-card-body">
+          <span class="tool-badge-pill">TCU Specialist</span>
+          <h2 class="tool-card-title">Magic Motorsport FLEX</h2>
+          <div class="tool-price">&euro; 1.100,- <small>excl. BTW + SW kit</small></div>
+          <ul class="tool-features">
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Uitgebreide TCU automaatbak dekking (DSG, ZF8HP)</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> FlexBox module voor bench &amp; boot pinouts</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> MagicX cloud platform met live updates</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Inclusief 5 gratis tuning credits</li>
+          </ul>
+          <button class="btn-cta-primary" onclick="openToolOrder('Magic Motorsport FLEX Slave', 1100)" style="width: 100%; justify-content: center; margin-top: auto;">
+            Bestellen / Aanvragen
+          </button>
+        </div>
+      </div>
+
+      <!-- 5. CMDFlash -->
+      <div class="tool-product-card">
+        <div class="tool-card-img">
+          <img src="/assets/img/cmdflash.png" alt="CMDFlash Tool">
+        </div>
+        <div class="tool-card-body">
+          <span class="tool-badge-pill">Bewezen Kwaliteit</span>
+          <h2 class="tool-card-title">CMDFlash Slave</h2>
+          <div class="tool-price">&euro; 1.950,- <small>excl. BTW</small></div>
+          <ul class="tool-features">
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Betrouwbaarste tool voor EDC16, EDC17 &amp; MED17</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Volledige ondersteuning voor BMW F &amp; G-serie</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Directe automatische checksum correctie</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Inclusief 5 gratis tuning credits</li>
+          </ul>
+          <button class="btn-cta-primary" onclick="openToolOrder('CMDFlash Slave', 1950)" style="width: 100%; justify-content: center; margin-top: auto;">
+            Bestellen / Aanvragen
+          </button>
+        </div>
+      </div>
+
+      <!-- 6. Autoflasher -->
+      <div class="tool-product-card">
+        <div class="tool-card-img">
+          <img src="/assets/img/autoflasher.png" alt="Autoflasher Tool">
+        </div>
+        <div class="tool-card-body">
+          <span class="tool-badge-pill">Beste Prijs</span>
+          <h2 class="tool-card-title">Autoflasher Slave</h2>
+          <div class="tool-price">&euro; 1.490,- <small>excl. BTW</small></div>
+          <ul class="tool-features">
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Eenvoudige plug-and-play bediening</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Snelle VAG &amp; BMW OBD leesprotocollen</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Robuuste koffer inclusief alle benodigde kabels</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Inclusief 5 gratis tuning credits</li>
+          </ul>
+          <button class="btn-cta-primary" onclick="openToolOrder('Autoflasher Slave', 1490)" style="width: 100%; justify-content: center; margin-top: auto;">
+            Bestellen / Aanvragen
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Explanation Section: Master vs Slave -->
+  <section id="why-slave" class="container">
+    <div class="comparison-section">
+      <div style="text-align: center; max-width: 800px; margin: 0 auto 3rem;">
+        <span class="tool-badge-pill">Samenwerking</span>
+        <h2 style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 1rem;">
+          Wat is het verschil tussen Master &amp; Slave?
+        </h2>
+        <p style="color: var(--text-muted); font-size: 1.05rem;">
+          Als autobedrijf of garage hoeft u zelf geen tienduizenden euro's te investeren in software licenties (WinOLS), scholing en testbanken. Met een Slave tool leest u eenvoudig de originele auto uit en bestelt u geteste software bij onze experts.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div style="background: rgba(10, 14, 23, 0.6); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 2rem;">
+          <h3 style="color: var(--accent); font-size: 1.35rem; margin-bottom: 1rem;">Voordelen van een Slave Tool</h3>
+          <ul class="tool-features">
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> <b>Lagere aanschafprijs</b>: Vaak 50% tot 70% goedkoper dan een Master tool.</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> <b>100% Dyno-geteste software</b>: Geen risico op motorschade of foute kalibraties.</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> <b>Supersnel resultaat</b>: Uw aangepaste tuningfile binnen 15 tot 30 minuten retour.</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> <b>Gratis support bij lastige ECU's</b>: Onze engineers helpen u live via WhatsApp.</li>
+            <li><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> <b>Vrijheid</b>: U behoudt het recht om uw tool later over te zetten naar een andere master of te upgraden.</li>
+          </ul>
+        </div>
+
+        <div style="background: rgba(10, 14, 23, 0.6); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 2rem;">
+          <h3 style="color: #fff; font-size: 1.35rem; margin-bottom: 1rem;">Hoe verloopt het proces in uw werkplaats?</h3>
+          <ol style="padding-left: 1.25rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem;">
+            <li><b>Stap 1: Uitlezen</b> &mdash; Koppel de Slave flasher via OBD aan de auto en lees de originele software uit (ca. 5 minuten).</li>
+            <li><b>Stap 2: Uploaden</b> &mdash; Log in op uw TuningPortal Dashboard, upload het bestand en geef aan welke Stage en wensen u heeft (pops, no-lift shift, egr off).</li>
+            <li><b>Stap 3: Modificatie</b> &mdash; Onze gecertificeerde tuners passen de software aan volgens de fabrikantmarges.</li>
+            <li><b>Stap 4: Schrijven</b> &mdash; U downloadt het aangepaste bestand en schrijft het in enkele minuten terug in de auto. Klaar voor aflevering!</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Order Modal -->
+  <div id="tool-order-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.5rem;">Offerte &amp; Bestelling Flasher Tool</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+        Bestel uw Slave tool gekoppeld aan de TuningPortal Master. Inclusief 5 gratis tuning credits en installatiehulp.
+      </p>
+
+      <form id="tool-order-form">
+        <div class="form-group">
+          <label class="form-label">Gekozen Tool *</label>
+          <input type="text" id="order-tool-name" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bedrijfsnaam *</label>
+          <input type="text" id="order-company" class="form-control" placeholder="Autobedrijf / Garage naam" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Contactpersoon *</label>
+            <input type="text" id="order-contact" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefoonnummer *</label>
+            <input type="tel" id="order-phone" class="form-control" placeholder="06 - ..." required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mailadres *</label>
+          <input type="email" id="order-email" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Afleveradres &amp; Postcode</label>
+          <input type="text" id="order-address" class="form-control" placeholder="Straat, Huisnummer, Postcode, Plaats">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gewenste protocollen / opmerkingen</label>
+          <textarea id="order-notes" class="form-control" placeholder="Bijv. OBD + Bench protocollen, spoedlevering gewenst..."></textarea>
+        </div>
+        <button type="submit" class="btn-cta-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Aanvraag Verzenden
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-bottom">
+      <p>&copy; 2026 TuningPortal. Alle rechten voorbehouden. Klaar voor uitrol op mijndomein.nl.</p>
+    </div>
+  </footer>
+
+  <script>
+    function openToolOrder(name, price) {
+      const modal = document.getElementById('tool-order-modal');
+      const input = document.getElementById('order-tool-name');
+      if (input) input.value = `${name} (€ ${price},- excl. BTW)`;
+      if (modal) modal.classList.add('active');
+    }
+
+    document.querySelectorAll('.modal-close').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+      });
+    });
+
+    document.getElementById('tool-order-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Bedankt voor uw aanvraag! Onze accountmanager neemt binnen 2 werkuren contact met u op voor de levering en accountkoppeling.');
+      document.getElementById('tool-order-modal')?.classList.remove('active');
+    });
+  </script>
+</body>
+</html>

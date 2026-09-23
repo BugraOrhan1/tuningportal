@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Database Iframe | TuningPortal</title>
+  <link rel="stylesheet" href="/assets/css/tuningportal.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    body {
+      background-color: transparent !important;
+      padding: 10px;
+      margin: 0 auto;
+      max-width: 1320px;
+    }
+    .tuning-box {
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="root">
+    <div class="tuning-box">
+      <!-- Header -->
+      <div class="tuning-box-header">
+        <div class="title-group">
+          <span class="title">Selecteer hier uw voertuig</span>
+          <span class="subtitle">Staat uw voertuig er niet tussen? <a href="/#contact" target="_parent">Neem dan contact op.</a></span>
+        </div>
+        <img src="/assets/img/Fast-Tuningshop-logo.png" alt="TuningPortal Logo" class="tuning-box-logo" onerror="this.style.display='none'">
+      </div>
+
+      <!-- Selector Row -->
+      <div class="selector-row">
+        <div class="select-wrapper">
+          <select id="make-select">
+            <option value="0">Selecteer uw Merk</option>
+          </select>
+        </div>
+        <div class="select-wrapper">
+          <select id="model-select" disabled>
+            <option value="0">Selecteer uw Model</option>
+          </select>
+        </div>
+        <div class="select-wrapper">
+          <select id="gen-select" disabled>
+            <option value="0">Selecteer uw Bouwjaar</option>
+          </select>
+        </div>
+        <div class="select-wrapper">
+          <select id="engine-select" disabled>
+            <option value="0">Selecteer uw Type</option>
+          </select>
+        </div>
+        <button id="calc-btn" class="btn-calculate">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Bekijk vermogen
+        </button>
+      </div>
+
+      <!-- Results View -->
+      <div id="results-view" class="results-container" style="display: block;">
+        <div class="results-header">
+          <div class="vehicle-title">
+            <h1 id="res-vehicle-title" style="font-size: 1.85rem; display: inline;">Volkswagen Golf 1.2 TSI 85pk</h1>
+            <div id="res-fuel-badge" class="badge-fuel benzine">Benzine</div>
+          </div>
+          <div class="stage-tabs">
+            <button class="stage-tab active" data-stage="stage1">Stage 1</button>
+            <button class="stage-tab" data-stage="stage2">Stage 2</button>
+            <button class="stage-tab" data-stage="stage3">Stage 3</button>
+            <button class="stage-tab" data-stage="eco">Eco Tuning</button>
+          </div>
+        </div>
+
+        <p id="res-stage-notice" class="stage-notice">
+          Raadpleeg uw tuner voor meer informatie over de mogelijkheden en voordelen van Stage 2 en Stage 3 tuning.
+        </p>
+
+        <!-- 3 Stat Cards -->
+        <div class="stats-cards">
+          <!-- Vermogen Card -->
+          <div class="stat-card">
+            <div id="res-hp-pct" class="stat-card-badge">+65%</div>
+            <div class="stat-card-header">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor" width="34" height="34" color="#0685c5">
+                <path d="M288 32C128.9 32 0 160.9 0 320c0 52.8 14.3 102.3 39.1 144.8 5.6 9.6 16.3 15.2 27.4 15.2h443c11.1 0 21.8-5.6 27.4-15.2C561.8 422.3 576 372.8 576 320c0-159.1-128.9-288-288-288zm0 64c14.7 0 26.6 10.1 30.3 23.7-1.1 2.3-2.6 4.2-3.5 6.7l-9.2 27.7c-5.1 3.5-11 6-17.6 6-17.7 0-32-14.3-32-32S270.3 96 288 96zM96 384c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm48-160c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm246.8-72.4l-61.3 184C343.1 347.3 352 364.5 352 384c0 11.7-3.4 22.6-8.9 32H232.9c-5.5-9.5-8.9-20.3-8.9-32 0-33.9 26.5-61.4 59.9-63.6l61.3-184c4.2-12.6 17.7-19.5 30.4-15.2 12.6 4.2 19.4 17.8 15.2 30.4zm14.7 57.2l15.5-46.6c3.5-1.3 7.1-2.2 11.1-2.2 17.7 0 32 14.3 32 32s-14.3 32-32 32c-11.4 0-20.9-6.3-26.6-15.2zM480 384c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"/>
+              </svg>
+              <span>Vermogen</span>
+            </div>
+            <div class="stat-values">
+              <span id="res-hp-val" class="stat-main-value">140 hp</span>
+              <span id="res-hp-gain" class="stat-gain">
+                <svg width="18" height="18" fill="#10b981" viewBox="0 0 210 210"><path d="M179.07,105L30.93,210V0L179.07,105z"/></svg>
+                +55 hp
+              </span>
+            </div>
+            <hr class="stat-divider">
+            <span id="res-hp-orig" class="stat-original"><b>Original:</b> 85 hp</span>
+          </div>
+
+          <!-- Koppel Card -->
+          <div class="stat-card">
+            <div id="res-nm-pct" class="stat-card-badge">+47%</div>
+            <div class="stat-card-header">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor" width="34" height="34" color="#0685c5">
+                <path d="M512.1 191l-8.2 14.3c-3 5.3-9.4 7.5-15.1 5.4-11.8-4.4-22.6-10.7-32.1-18.6-4.6-3.8-5.8-10.5-2.8-15.7l8.2-14.3c-6.9-8-12.3-17.3-15.9-27.4h-16.5c-6 0-11.2-4.3-12.2-10.3-2-12-2.1-24.6 0-37.1 1-6 6.2-10.4 12.2-10.4h16.5c3.6-10.1 9-19.4 15.9-27.4l-8.2-14.3c-3-5.2-1.9-11.9 2.8-15.7 9.5-7.9 20.4-14.2 32.1-18.6 5.7-2.1 12.1 .1 15.1 5.4l8.2 14.3c10.5-1.9 21.2-1.9 31.7 0L552 6.3c3-5.3 9.4-7.5 15.1-5.4 11.8 4.4 22.6 10.7 32.1 18.6 4.6 3.8 5.8 10.5 2.8 15.7l-8.2 14.3c6.9 8 12.3 17.3 15.9 27.4h16.5c6 0 11.2 4.3 12.2 10.3 2 12 2.1 24.6 0 37.1-1 6-6.2 10.4-12.2 10.4h-16.5c-3.6 10.1-9 19.4-15.9 27.4l8.2 14.3c3 5.2 1.9 11.9-2.8 15.7-9.5 7.9-20.4 14.2-32.1 18.6-5.7 2.1-12.1-.1-15.1-5.4l-8.2-14.3c-10.4 1.9-21.2 1.9-31.7 0zm-10.5-58.8c38.5 29.6 82.4-14.3 52.8-52.8-38.5-29.7-82.4 14.3-52.8 52.8zM386.3 286.1l33.7 16.8c10.1 5.8 14.5 18.1 10.5 29.1-8.9 24.2-26.4 46.4-42.6 65.8-7.4 8.9-20.2 11.1-30.3 5.3l-29.1-16.8c-16 13.7-34.6 24.6-54.9 31.7v33.6c0 11.6-8.3 21.6-19.7 23.6-24.6 4.2-50.4 4.4-75.9 0-11.5-2-20-11.9-20-23.6V418c-20.3-7.2-38.9-18-54.9-31.7L74 403c-10 5.8-22.9 3.6-30.3-5.3-16.2-19.4-33.3-41.6-42.2-65.7-4-10.9 .4-23.2 10.5-29.1l33.3-16.8c-3.9-20.9-3.9-42.4 0-63.4L12 205.8c-10.1-5.8-14.6-18.1-10.5-29 8.9-24.2 26-46.4 42.2-65.8 7.4-8.9 20.2-11.1 30.3-5.3l29.1 16.8c16-13.7 34.6-24.6 54.9-31.7V57.1c0-11.5 8.2-21.5 19.6-23.5 24.6-4.2 50.5-4.4 76-.1 11.5 2 20 11.9 20 23.6v33.6c20.3 7.2 38.9 18 54.9 31.7l29.1-16.8c10-5.8 22.9-3.6 30.3 5.3 16.2 19.4 33.2 41.6 42.1 65.8 4 10.9 .1 23.2-10 29.1l-33.7 16.8c3.9 21 3.9 42.5 0 63.5zm-117.6 21.1c59.2-77-28.7-164.9-105.7-105.7-59.2 77 28.7 164.9 105.7 105.7z"/>
+              </svg>
+              <span>Koppel</span>
+            </div>
+            <div class="stat-values">
+              <span id="res-nm-val" class="stat-main-value">235 nm</span>
+              <span id="res-nm-gain" class="stat-gain">
+                <svg width="18" height="18" fill="#10b981" viewBox="0 0 210 210"><path d="M179.07,105L30.93,210V0L179.07,105z"/></svg>
+                +75 nm
+              </span>
+            </div>
+            <hr class="stat-divider">
+            <span id="res-nm-orig" class="stat-original"><b>Original:</b> 160 nm</span>
+          </div>
+
+          <!-- Brandstof Card -->
+          <div class="stat-card">
+            <div id="res-fuel-pct" class="stat-card-badge">+10%</div>
+            <div class="stat-card-header">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" width="34" height="34" color="#0685c5">
+                <path d="M96 128C96 92.7 124.7 64 160 64L320 64C355.3 64 384 92.7 384 128L384 320L392 320C440.6 320 480 359.4 480 408L480 440C480 453.3 490.7 464 504 464C517.3 464 528 453.3 528 440L528 286C500.4 278.9 480 253.8 480 224L480 164.5L454.2 136.2C445.3 126.4 446 111.2 455.8 102.3C465.6 93.4 480.8 94.1 489.7 103.9L561.4 182.7C570.8 193 576 206.4 576 220.4L576 440C576 479.8 543.8 512 504 512C464.2 512 432 479.8 432 440L432 408C432 385.9 414.1 368 392 368L384 368L384 529.4C393.3 532.7 400 541.6 400 552C400 565.3 389.3 576 376 576L104 576C90.7 576 80 565.3 80 552C80 541.5 86.7 532.7 96 529.4L96 128z"/>
+              </svg>
+              <span>Brandstofbesparing</span>
+            </div>
+            <div class="stat-values">
+              <span id="res-fuel-val" class="stat-main-value">4.4 L/100km</span>
+              <span id="res-fuel-diff" class="stat-gain">
+                <svg width="18" height="18" fill="#10b981" viewBox="0 0 210 210"><path d="M179.07,105L30.93,210V0L179.07,105z"/></svg>
+                -0.5 L/100km
+              </span>
+            </div>
+            <hr class="stat-divider">
+            <span id="res-fuel-orig" class="stat-original"><b>Original:</b> 4.9 L/100km</span>
+          </div>
+        </div>
+
+        <!-- Specs & Extra Options -->
+        <div class="specs-and-options">
+          <!-- Motorspecificaties -->
+          <div class="panel-card">
+            <h2>Motorspecificaties</h2>
+            <div class="specs-table">
+              <div class="specs-table-header">
+                <span>Type</span>
+                <span>Waarde</span>
+              </div>
+              <div id="res-specs-list">
+                <div class="specs-row"><span class="specs-label">Cilinderinhoud</span><span class="specs-value">1197 CC</span></div>
+                <div class="specs-row"><span class="specs-label">Compressieverhouding</span><span class="specs-value">10,5 : 1</span></div>
+                <div class="specs-row"><span class="specs-label">Type ECU</span><span class="specs-value">Bosch MED17.5.21 & Bosch MED17.5.25 & Temic DQ200</span></div>
+                <div class="specs-row"><span class="specs-label">Boring X slag</span><span class="specs-value">71,0 X 75,6 mm</span></div>
+                <div class="specs-row"><span class="specs-label">Motornummer</span><span class="specs-value">CBZA</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Extra Opties -->
+          <div class="panel-card">
+            <h2>Extra opties</h2>
+            <div id="res-options-grid" class="options-grid">
+              <!-- Rendered via JS -->
+            </div>
+            <p class="options-notice">
+              Raadpleeg uw tuner om te bevestigen welke opties beschikbaar zijn voor uw specifieke voertuig.
+            </p>
+          </div>
+        </div>
+
+        <!-- Graphs: Vermogen & Koppel Dyno + Brandstofbesparing Gauge -->
+        <div class="graphs-row">
+          <div class="graph-card">
+            <h2>Vermogen &amp; koppel (Dyno Grafiek)</h2>
+            <div class="dyno-container">
+              <canvas id="dyno-canvas" height="300"></canvas>
+            </div>
+          </div>
+          <div class="graph-card">
+            <h2>Brandstofbesparing</h2>
+            <div class="fuel-gauge-container">
+              <canvas id="fuel-gauge-canvas" width="160" height="160"></canvas>
+              <div class="fuel-gauge-center">
+                <div id="fuel-gauge-center-val" class="fuel-gauge-val">4.4</div>
+                <div class="fuel-gauge-unit">L/100km</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="cta-actions">
+          <button class="btn-cta-primary btn-open-booking">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Boek een Afspraak
+          </button>
+          <a href="/dashboard.html" target="_parent" class="btn-cta-secondary">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+            Vraag File Service Aan
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div id="booking-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.5rem;">Afspraak Plannen</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">
+        Laat uw gegevens achter voor professionele chiptuning op maat.
+      </p>
+      <form id="booking-form">
+        <div class="form-group">
+          <label class="form-label">Geselecteerd Voertuig</label>
+          <input type="text" id="book-vehicle" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Uw Naam *</label>
+          <input type="text" id="book-name" class="form-control" placeholder="Bijv. Jan de Vries" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Telefoonnummer *</label>
+          <input type="tel" id="book-phone" class="form-control" placeholder="06 12345678" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mailadres *</label>
+          <input type="email" id="book-email" class="form-control" placeholder="naam@voorbeeld.nl" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gewenste Datum</label>
+          <input type="date" id="book-date" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Opmerkingen / Wensen</label>
+          <textarea id="book-notes" class="form-control" placeholder="Bijv. graag Pops & Bangs toevoegen..."></textarea>
+        </div>
+        <button type="submit" class="btn-cta-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Afspraak Bevestigen
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/assets/js/tuning-core.js"></script>
+
+  <!-- Auto-resize communication with parent window if iframe -->
+  <script>
+    function sendHeight() {
+      const height = document.getElementById('root')?.scrollHeight || document.body.scrollHeight;
+      window.parent.postMessage({ type: 'tuningportal-resize', height: height + 20 }, '*');
+    }
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+    const observer = new MutationObserver(sendHeight);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+  </script>
+
+</body>
+</html>
